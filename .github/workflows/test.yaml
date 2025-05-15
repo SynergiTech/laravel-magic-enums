@@ -1,0 +1,18 @@
+name: Tests
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        laravel: [10, 11, 12]
+        php: [8.2, 8.3, 8.4]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: test against Laravel ${{ matrix.laravel }} on PHP ${{ matrix.php }}
+        run: docker build . --build-arg PHP_VERSION=${{ matrix.php }} --build-arg LARAVEL=${{ matrix.laravel }}

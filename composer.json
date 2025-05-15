@@ -1,0 +1,43 @@
+{
+    "name": "synergitech/laravel-magic-enums",
+    "type": "library",
+    "homepage": "https://github.com/SynergiTech/laravel-magic-enums",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Synergi Tech",
+            "homepage": "http://github.com/SynergiTech"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "symfony/process": "~4.0 || ~5.0 || ~6.0 || ~7.0",
+        "guzzlehttp/guzzle": "^6.3 || ^7.0",
+        "laravel/framework": "^11"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.0|^9.0|^10.0",
+        "phpunit/phpunit": "^11.0",
+        "phpstan/phpstan": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "SynergiTech\\MagicEnums\\": "src/",
+            "SynergiTech\\MagicEnums\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SynergiTech\\MagicEnums\\MagicEnumServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "test": [
+            "Composer\\Config::disableProcessTimeout",
+            "phpunit",
+            "phpstan analyse"
+        ]
+    }
+}
