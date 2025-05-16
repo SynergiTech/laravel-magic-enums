@@ -4,3 +4,4 @@ composer.lock
 coverage-html
 coverage.xml
 .phpunit.cache
+.phpunit.result.cache
