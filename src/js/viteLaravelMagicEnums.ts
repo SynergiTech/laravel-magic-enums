@@ -80,11 +80,9 @@ export function laravelMagicEnums(options: PluginOptions): Plugin {
 
       await fs.writeFile(
         pluginConfig.interfaceOutput,
-        `
-        declare global {
-          interface LaravelMagicEnums ${JSON.stringify(json)};
-        }
-        `
+        `declare global { interface LaravelMagicEnums ${JSON.stringify(
+          json
+        )};} export {};`
       );
 
       // Prettier.

@@ -1,4 +1,5 @@
-const enums = {};
+// @ts-expect-error This is okay, we're hacking.
+const enums: LaravelMagicEnums = {};
 
 export function setEnums(options: { [x: string]: any }) {
   for (const key in options) {
