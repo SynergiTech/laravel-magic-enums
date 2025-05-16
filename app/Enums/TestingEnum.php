@@ -22,6 +22,8 @@ enum TestingEnum: string
     /**
      * this makes a sub-enum of this enum in
      * the output with only the listed values
+     *
+     * typed consts have been available since 8.2
      */
     #[AppendConstToMagic]
     public const THREE_QUARTERS = [
@@ -36,6 +38,8 @@ enum TestingEnum: string
     /**
      * this appends extra properties
      * to each enum value (or null if missing)
+     *
+     * typed consts have been available since 8.2
      */
     #[AppendValueToMagic]
     public const COLOURS = [
