@@ -16,7 +16,9 @@ class TestCase extends OrchestraTestCase
     {
         parent::resolveApplicationConfiguration($app);
 
-        $app['config']->set('magicenums.enum_directory', '/package/tests/Enums');
+        // app_path behaves differently in orchestra testbench
+        // so hardcode the path the container expects
+        $app['config']->set('magicenums.enum_directory', '/package/app/Enums');
     }
 
     public function getEnvironmentSetUp($app)
@@ -24,7 +26,7 @@ class TestCase extends OrchestraTestCase
         $app['config']->set('database.default', 'testing');
     }
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

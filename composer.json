@@ -11,18 +11,24 @@
     ],
     "require": {
         "php": "^8.2",
-        "symfony/process": "~4.0 || ~5.0 || ~6.0 || ~7.0",
-        "guzzlehttp/guzzle": "^6.3 || ^7.0",
-        "laravel/framework": "^11"
+        "laravel/framework": ">=9.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^8.0|^9.0|^10.0",
+        "larastan/larastan": "^3.0",
+        "orchestra/testbench": "^9.0|^10.0",
+        "php-parallel-lint/php-parallel-lint": "^1.4",
+        "phpstan/extension-installer": "^1.4",
         "phpunit/phpunit": "^11.0",
-        "phpstan/phpstan": "^2.0"
+        "squizlabs/php_codesniffer": "^3.13"
     },
     "autoload": {
         "psr-4": {
-            "SynergiTech\\MagicEnums\\": "src/",
+            "SynergiTech\\MagicEnums\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\": "app/",
             "SynergiTech\\MagicEnums\\Tests\\": "tests/"
         }
     },
@@ -34,10 +40,26 @@
         }
     },
     "scripts": {
+        "analyse": [
+            "phpstan analyse --memory-limit 2G --level 8 app tests"
+        ],
+        "lint": [
+            "parallel-lint --exclude vendor .",
+            "phpcs --standard=PSR12 src/ tests/"
+        ],
         "test": [
             "Composer\\Config::disableProcessTimeout",
-            "phpunit",
-            "phpstan analyse"
+            "@lint",
+            "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text",
+            "@analyse"
         ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
     }
 }

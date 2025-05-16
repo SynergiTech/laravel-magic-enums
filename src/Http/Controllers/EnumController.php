@@ -19,7 +19,7 @@ class EnumController
 
         $cache->put('enums_last_modified', $time);
 
-        if (app()->runningUnitTests() || app()->environment('local') || $time > $cache->get('enums_last_modified', 0)) {
+        if (app()->runningUnitTests() || app()->isLocal() || $time > $cache->get('enums_last_modified', 0)) {
             $cache->forget('enums');
         }
 
@@ -39,14 +39,16 @@ class EnumController
                     return $class;
                 })
                 ->filter(fn ($i) => method_exists($i, 'toVueArray'))
+                ->values()
                 ->toArray();
 
             foreach ($enums as $class) {
-                $values[str_replace(['App\\Enums', '\\'], '', $class)] = $class::toVueArray();
-				foreach ($class::getConsts() as $exposed) {
-                    $key = Str::of($exposed)->lower()->studly();
-                    $values[str_replace(['App\\Enums', '\\'], '', $class) . $key] = $class::toVueArray(only: constant("{$class}::{$exposed}"));
+                $classKey = str_replace([config('magicenums.enum_namespace'), '\\'], '', $class);
 
+                $values[$classKey] = $class::toVueArray();
+                foreach ($class::getConsts() as $exposed) {
+                    $constKey = Str::of($exposed)->lower()->studly();
+                    $values[$classKey . $constKey] = $class::toVueArray(only: constant("{$class}::{$exposed}"));
                 }
             }
 

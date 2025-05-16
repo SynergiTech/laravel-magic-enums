@@ -64,7 +64,7 @@ trait WithToVueArray
     {
         static $values = null;
 
-        if(is_null($values)) {
+        if (is_null($values)) {
             $reflection = new ReflectionEnum(self::class);
             $constants = self::getConstants();
             $values = array_filter(
@@ -87,7 +87,7 @@ trait WithToVueArray
     {
         static $values = null;
 
-        if(is_null($values)) {
+        if (is_null($values)) {
             $reflection = new ReflectionEnum(self::class);
             $constants = self::getConstants();
             $values = array_filter(

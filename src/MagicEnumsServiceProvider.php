@@ -2,11 +2,7 @@
 
 namespace SynergiTech\MagicEnums;
 
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Postal\Client;
-use SynergiTech\Postal\Controllers\WebhookController;
 
 class MagicEnumsServiceProvider extends ServiceProvider
 {
@@ -18,5 +14,8 @@ class MagicEnumsServiceProvider extends ServiceProvider
         $this->publishes([
             $configPath => config_path('magicenums.php'),
         ], 'config');
-	}
+
+         // include the config file from the package if it isn't published
+        $this->mergeConfigFrom($configPath, 'magicenums');
+    }
 }
