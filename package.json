@@ -26,13 +26,13 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
-  "dependencies": {
-    "chokidar": "^4.0.3"
-  },
   "devDependencies": {
     "@types/node": "^22.15.17",
     "typescript": "~5.8.3",
     "vite": "^6.3.5",
     "vite-plugin-dts": "^4.5.3"
+  },
+  "peerDependencies": {
+    "chokidar": "^4.0.0"
   }
 }
