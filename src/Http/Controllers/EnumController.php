@@ -13,17 +13,7 @@ class EnumController
 {
     public function __invoke(): Response|JsonResponse
     {
-        $cache = Cache::driver('file');
-        $versioned = file_exists('/var/www/VERSION');
-        $time = $versioned ? filemtime('/var/www/VERSION') : -1;
-
-        $cache->put('enums_last_modified', $time);
-
-        if (app()->runningUnitTests() || app()->environment('local') || $time > $cache->get('enums_last_modified', 0)) {
-            $cache->forget('enums');
-        }
-
-        $enums = $cache->rememberForever('enums', function () {
+        $exportEnums = function () {
             $values = [];
 
             /** @var iterable<string,\SplFileInfo> */
@@ -42,17 +32,31 @@ class EnumController
                 ->toArray();
 
             foreach ($enums as $class) {
-                $values[str_replace(['App\\Enums', '\\'], '', $class)] = $class::toVueArray();
+                $values[str_replace([config('magicenums.enum_directory'), '\\'], '', $class)] = $class::toVueArray();
 				foreach ($class::getConsts() as $exposed) {
                     $key = Str::of($exposed)->lower()->studly();
-                    $values[str_replace(['App\\Enums', '\\'], '', $class) . $key] = $class::toVueArray(only: constant("{$class}::{$exposed}"));
+                    $values[str_replace([config('magicenums.enum_directory'), '\\'], '', $class) . $key] = $class::toVueArray(only: constant("{$class}::{$exposed}"));
 
                 }
             }
 
             /** @var array<string,array<string,string>> $values */
             return $values;
-        });
+        };
+
+        $cache = Cache::driver('file');
+        $cacheKeyName = config('magicenums.cache_key_name');
+        
+        $versioned = file_exists('/var/www/VERSION');
+        $time = $versioned ? filemtime('/var/www/VERSION') : -1;
+
+        $cache->put('enums_last_modified', $time);
+
+        if (app()->runningUnitTests() || app()->environment('local') || $time > $cache->get('enums_last_modified', 0)) {
+            $cache->forget($cacheKeyName);
+        }
+
+        $enums = $cache->rememberForever($cacheKeyName, $exportEnums);
 
         return response()->json($enums);
     }

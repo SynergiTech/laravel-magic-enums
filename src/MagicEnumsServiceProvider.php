@@ -1,12 +1,8 @@
 <?php
 
 namespace SynergiTech\MagicEnums;
-
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\ServiceProvider;
-use Postal\Client;
-use SynergiTech\Postal\Controllers\WebhookController;
+ 
+use Illuminate\Support\ServiceProvider; 
 
 class MagicEnumsServiceProvider extends ServiceProvider
 {
