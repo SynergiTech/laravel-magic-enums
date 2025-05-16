@@ -42,10 +42,10 @@ class EnumController
                 ->toArray();
 
             foreach ($enums as $class) {
-                $values[str_replace(['App\\Enums', '\\'], '', $class)] = $class::toVueArray();
+                $values[str_replace([config('magicenums.enum_directory'), '\\'], '', $class)] = $class::toVueArray();
 				foreach ($class::getConsts() as $exposed) {
                     $key = Str::of($exposed)->lower()->studly();
-                    $values[str_replace(['App\\Enums', '\\'], '', $class) . $key] = $class::toVueArray(only: constant("{$class}::{$exposed}"));
+                    $values[str_replace([config('magicenums.enum_directory'), '\\'], '', $class) . $key] = $class::toVueArray(only: constant("{$class}::{$exposed}"));
 
                 }
             }
