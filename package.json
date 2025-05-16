@@ -1,0 +1,38 @@
+{
+  "name": "laravel-magic-enums",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "build/index.cjs",
+  "module": "build/index.js",
+  "exports": {
+    ".": {
+      "import": "./build/useEnums.js",
+      "require": "./build/useEnums.cjs"
+    },
+    "./vite": {
+      "import": "./build/viteLaravelMagicEnums.js",
+      "require": "./build/viteLaravelMagicEnums.cjs"
+    }
+  },
+  "files": [
+    "build",
+    "./build/*.d.ts"
+  ],
+  "types": "./build/useEnums.d.ts",
+  "scripts": {
+    "pkg": "vite build --mode=package",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "chokidar": "^4.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.17",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5",
+    "vite-plugin-dts": "^4.5.3"
+  }
+}

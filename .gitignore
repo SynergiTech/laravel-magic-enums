@@ -3,3 +3,6 @@ composer.lock
 coverage-html
 coverage.xml
 .phpunit.cache
+
+node_modules
+build
