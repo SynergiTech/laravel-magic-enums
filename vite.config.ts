@@ -1,42 +1,44 @@
-import { defineConfig, type UserConfig } from "vite";
-import { resolve } from "path";
-import dts from "vite-plugin-dts";
+import { defineConfig, type UserConfig } from 'vite';
+import { resolve } from 'node:path';
+import dts from 'vite-plugin-dts';
+import { fileURLToPath, URL } from 'node:url';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const baseConfig: UserConfig = {
     plugins: (function () {
-      if (mode === "package") {
+      if (mode === 'package') {
         return [
           dts({
-            entryRoot: "src/js/",
-            tsconfigPath: "./tsconfig.json",
+            entryRoot: 'src/js/',
+            tsconfigPath: './tsconfig.json',
           }),
         ];
       }
       return [];
     })(),
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('src/js', import.meta.url)),
+      },
+    },
   };
 
-  if (mode === "package") {
+  if (mode === 'package') {
     return {
       ...baseConfig,
       build: {
-        outDir: "build",
+        outDir: 'dist',
         emptyOutDir: true,
         lib: {
-          name: "LaravelMagicEnums",
           entry: {
-            useEnums: resolve("src/js/useEnums.ts"),
-            viteLaravelMagicEnums: resolve("src/js/viteLaravelMagicEnums.ts"),
+            useEnums: resolve('src/js/useEnums.ts'),
+            viteLaravelMagicEnums: resolve('src/js/viteLaravelMagicEnums.ts'),
           },
-          formats: ["es", "cjs"],
+          formats: ['es', 'cjs'],
         },
         rollupOptions: {
-          external: ["fs", "path", "chokidar", "child_process"],
-          globals: {
-            process: "process",
-          },
+          external: ['fs', 'path', 'chokidar', 'child_process'],
         },
       },
     };
@@ -46,7 +48,7 @@ export default defineConfig(({ mode }) => {
   return {
     ...baseConfig,
     build: {
-      outDir: "./docs",
+      outDir: './docs',
       emptyOutDir: true,
     },
   };

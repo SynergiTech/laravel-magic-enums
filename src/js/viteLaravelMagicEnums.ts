@@ -1,7 +1,7 @@
-import { promises as fs } from "fs";
-import { exec } from "child_process";
-import chokidar, { type FSWatcher, type ChokidarOptions } from "chokidar";
-import type { Plugin, ResolvedConfig } from "vite";
+import { promises as fs } from 'fs';
+import { exec } from 'child_process';
+import chokidar, { type FSWatcher, type ChokidarOptions } from 'chokidar';
+import type { Plugin, ResolvedConfig } from 'vite';
 
 interface PluginOptions {
   /**
@@ -31,9 +31,9 @@ interface PluginOptions {
 }
 
 const defaultOptions = {
-  enumDir: "app/Enums",
-  enumEndpoint: "//localhost/enums",
-  interfaceOutput: "laravel-magic-enums.d.ts",
+  enumDir: 'app/Enums',
+  enumEndpoint: '//localhost/enums',
+  interfaceOutput: 'laravel-magic-enums.d.ts',
   prettierCommand: undefined,
 };
 
@@ -62,9 +62,9 @@ export function laravelMagicEnums(options: PluginOptions): Plugin {
 
   Object.assign(pluginConfig.chokidarOptions, options.chokidarOptions ?? {});
 
-  const listenToEnumFolder = debounce(async function (e: string) {
+  const listenToEnumFolder = debounce(function (e: string) {
     if (e.startsWith(pluginConfig.enumDir.slice(2))) {
-      await exportEnums();
+      exportEnums();
     }
   }, 200);
 
@@ -73,7 +73,7 @@ export function laravelMagicEnums(options: PluginOptions): Plugin {
       const response = await fetch(pluginConfig.enumEndpoint);
 
       if (!response.ok) {
-        throw new Error("Failed to fetch enums");
+        throw new Error('Failed to fetch enums');
       }
 
       const json = await response.json();
@@ -81,27 +81,27 @@ export function laravelMagicEnums(options: PluginOptions): Plugin {
       await fs.writeFile(
         pluginConfig.interfaceOutput,
         `declare global { interface LaravelMagicEnums ${JSON.stringify(
-          json
-        )};} export {};`
+          json,
+        )};} export {};`,
       );
 
       // Prettier.
       if (pluginConfig.prettierCommand) {
         exec(
-          `${pluginConfig.prettierCommand} --write ${pluginConfig.interfaceOutput}`
+          `${pluginConfig.prettierCommand} --write ${pluginConfig.interfaceOutput}`,
         );
       }
     };
 
-    console.info("Rebuilding enums file...");
+    console.info('Rebuilding enums file...');
 
     try {
       await get();
-      console.info("... Rebuilt enums file!");
+      console.info('... Rebuilt enums file!');
     } catch (e) {
       console.error(
-        "Failed to rebuild enums file. Trying again in 2 seconds.",
-        e
+        'Failed to rebuild enums file. Trying again in 2 seconds.',
+        e,
       );
 
       setTimeout(exportEnums, 2000);
@@ -109,17 +109,17 @@ export function laravelMagicEnums(options: PluginOptions): Plugin {
   }
 
   return {
-    name: "laravel-magic-enums",
+    name: 'laravel-magic-enums',
     configResolved(config) {
       resolvedConfig = config;
 
       fsWatcher = chokidar
         .watch(pluginConfig.enumDir, pluginConfig.chokidarOptions)
-        .on("change", listenToEnumFolder)
-        .on("add", listenToEnumFolder)
-        .on("unlink", listenToEnumFolder);
+        .on('change', listenToEnumFolder)
+        .on('add', listenToEnumFolder)
+        .on('unlink', listenToEnumFolder);
 
-      if (resolvedConfig.mode === "development") {
+      if (resolvedConfig.mode === 'development') {
         exportEnums();
       }
     },
@@ -130,10 +130,9 @@ export function laravelMagicEnums(options: PluginOptions): Plugin {
   };
 }
 
-// https://decipher.dev/30-seconds-of-typescript/docs/debounce/
-function debounce(fn: Function, ms = 300) {
+function debounce<T extends (...args: never[]) => void>(fn: T, ms = 300) {
   let timeoutId: ReturnType<typeof setTimeout>;
-  return function (this: unknown, ...args: unknown[]) {
+  return function (this: unknown, ...args: Parameters<T>) {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => fn.apply(this, args), ms);
   };

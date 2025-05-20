@@ -1,15 +1,15 @@
 // @ts-expect-error This is okay, we're hacking.
 const enums: LaravelMagicEnums = {};
 
-export function setEnums(options: { [x: string]: any }) {
+export function setEnums(options: { [x: string]: never }) {
   for (const key in options) {
     enums[key] = new Proxy(options[key], {
       get(target, prop) {
-        if (typeof prop !== "string") {
+        if (typeof prop !== 'string') {
           return false;
         }
 
-        const normalisedKey = prop.replaceAll(" ", "");
+        const normalisedKey = prop.replaceAll(' ', '');
 
         if (Reflect.has(target, normalisedKey)) {
           return Reflect.get(target, normalisedKey);
