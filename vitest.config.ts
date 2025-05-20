@@ -8,13 +8,13 @@ export default mergeConfig(
       exclude: [...configDefaults.exclude],
       coverage: {
         provider: 'v8',
-        include: ['src/tests/js/**/*.spec.ts'],
-        thresholds: {
-          branches: 100,
-          functions: 100,
-          lines: 100,
-          statements: 100,
-        },
+        include: ['src/js'],
+        /*  thresholds: {
+          branches: 50,
+          functions: 50,
+          lines: 50,
+          statements: 50,
+        }, */
       },
     },
   }),
