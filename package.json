@@ -1,0 +1,61 @@
+{
+  "name": "laravel-magic-enums",
+  "version": "0.0.0",
+  "private": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/useEnums.js",
+      "require": "./dist/useEnums.cjs"
+    },
+    "./vite": {
+      "import": "./dist/viteLaravelMagicEnums.js",
+      "require": "./dist/viteLaravelMagicEnums.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "dist/*.d.ts"
+  ],
+  "types": "./dist/useEnums.d.ts",
+  "homepage": "https://github.com/SynergiTech/laravel-magic-enums",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SynergiTech/laravel-magic-enums.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SynergiTech/laravel-magic-enums/issues"
+  },
+  "author": {
+    "name": "synergitech",
+    "url": "https://www.npmjs.com/~synergitech"
+  },
+  "scripts": {
+    "build": "vite build",
+    "build:package": "vite build --mode=package",
+    "test:unit": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "lint:fix": "npm run lint -- --fix",
+    "fmt": "prettier . --check",
+    "fmt:fix": "prettier --write .",
+    "ts:check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.27.0",
+    "@types/bun": "^1.2.13",
+    "@types/node": "^22.15.17",
+    "@vitest/coverage-v8": "^3.1.4",
+    "eslint": "^9.27.0",
+    "eslint-config-prettier": "^10.1.5",
+    "prettier": "^3.5.3",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.32.1",
+    "vite": "^6.3.5",
+    "vite-plugin-dts": "^4.5.3",
+    "vitest": "^3.1.4"
+  },
+  "peerDependencies": {
+    "chokidar": "^4.0.0"
+  }
+}

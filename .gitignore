@@ -5,3 +5,8 @@ coverage-html
 coverage.xml
 .phpunit.cache
 .phpunit.result.cache
+
+node_modules
+dist
+*.tgz
+coverage
