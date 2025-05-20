@@ -7,8 +7,8 @@ use SynergiTech\MagicEnums\Http\Controllers\EnumController;
 
 class MagicEnumsRouteService
 {
-	public function enumsController()
-	{
-		Route::get('/enums', EnumController::class)->name('enums');
-	}
+    public function enumsController(): void
+    {
+        Route::get('/enums', EnumController::class)->name('enums');
+    }
 }

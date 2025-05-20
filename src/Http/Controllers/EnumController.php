@@ -13,7 +13,17 @@ class EnumController
 {
     public function __invoke(): Response|JsonResponse
     {
-        $exportEnums = function () {
+        $cache = Cache::driver('file');
+        $versioned = file_exists('/var/www/VERSION');
+        $time = $versioned ? filemtime('/var/www/VERSION') : -1;
+
+        $cache->put('enums_last_modified', $time);
+
+        if (app()->runningUnitTests() || app()->isLocal() || $time > $cache->get('enums_last_modified', 0)) {
+            $cache->forget('enums');
+        }
+
+        $enums = $cache->rememberForever('enums', function () {
             $values = [];
 
             /** @var iterable<string,\SplFileInfo> */
@@ -29,34 +39,22 @@ class EnumController
                     return $class;
                 })
                 ->filter(fn ($i) => method_exists($i, 'toVueArray'))
+                ->values()
                 ->toArray();
 
             foreach ($enums as $class) {
-                $values[str_replace([config('magicenums.enum_directory'), '\\'], '', $class)] = $class::toVueArray();
-				foreach ($class::getConsts() as $exposed) {
-                    $key = Str::of($exposed)->lower()->studly();
-                    $values[str_replace([config('magicenums.enum_directory'), '\\'], '', $class) . $key] = $class::toVueArray(only: constant("{$class}::{$exposed}"));
+                $classKey = str_replace([config('magicenums.enum_namespace'), '\\'], '', $class);
 
+                $values[$classKey] = $class::toVueArray();
+                foreach ($class::getConsts() as $exposed) {
+                    $constKey = Str::of($exposed)->lower()->studly();
+                    $values[$classKey . $constKey] = $class::toVueArray(only: constant("{$class}::{$exposed}"));
                 }
             }
 
             /** @var array<string,array<string,string>> $values */
             return $values;
-        };
-
-        $cache = Cache::driver('file');
-        $cacheKeyName = config('magicenums.cache_key_name');
-        
-        $versioned = file_exists('/var/www/VERSION');
-        $time = $versioned ? filemtime('/var/www/VERSION') : -1;
-
-        $cache->put('enums_last_modified', $time);
-
-        if (app()->runningUnitTests() || app()->environment('local') || $time > $cache->get('enums_last_modified', 0)) {
-            $cache->forget($cacheKeyName);
-        }
-
-        $enums = $cache->rememberForever($cacheKeyName, $exportEnums);
+        });
 
         return response()->json($enums);
     }
