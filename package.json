@@ -1,7 +1,6 @@
 {
   "name": "laravel-magic-enums",
   "version": "0.0.0",
-  "module": "dist/index.js",
   "private": false,
   "type": "module",
   "exports": {
@@ -18,7 +17,7 @@
     "dist",
     "dist/*.d.ts"
   ],
-  "types": "./build/useEnums.d.ts",
+  "types": "./dist/useEnums.d.ts",
   "homepage": "https://github.com/SynergiTech/laravel-magic-enums",
   "repository": {
     "type": "git",
@@ -32,8 +31,8 @@
     "url": "https://www.npmjs.com/~synergitech"
   },
   "scripts": {
-    "pkg": "vite build --mode=package",
     "build": "vite build",
+    "build:package": "vite build --mode=package",
     "test:unit": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint .",
