@@ -35,7 +35,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "SynergiTech\\MagicEnums\\MagicEnumServiceProvider"
+        "SynergiTech\\MagicEnums\\MagicEnumsServiceProvider"
       ]
     }
   },
