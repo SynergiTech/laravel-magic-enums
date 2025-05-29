@@ -5,19 +5,19 @@
   "type": "module",
   "exports": {
     ".": {
+      "types": "./dist/useEnums.d.ts",
       "import": "./dist/useEnums.js",
       "require": "./dist/useEnums.cjs"
     },
     "./vite": {
+      "types": "./dist/viteLaravelMagicEnums.d.ts",
       "import": "./dist/viteLaravelMagicEnums.js",
       "require": "./dist/viteLaravelMagicEnums.cjs"
     }
   },
   "files": [
-    "dist",
-    "dist/*.d.ts"
+    "dist"
   ],
-  "types": "./dist/useEnums.d.ts",
   "homepage": "https://github.com/SynergiTech/laravel-magic-enums",
   "repository": {
     "type": "git",
