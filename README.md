@@ -96,7 +96,7 @@ export default defineConfig({
 5. Now in your components you can reference your enums as if they were key value objects
 
 ```js
-import { useEnums } from "laravel-magic-enums";
+import { useEnums } from 'laravel-magic-enums';
 
 const { YourEnum, YourOtherEnum } = useEnums();
 ```
