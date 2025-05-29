@@ -41,11 +41,11 @@ Route::prefix('/api')->group(function () {
 });
 ```
 
-You can obviously include middleware on it if you wish, i.e. for an authenticated session, but this may affect your frontends ability to initialise so please be careful.
+You can obviously include middleware on it if you wish, e.g. for an authenticated session, but this may affect your frontend's ability to initialise, so please be careful.
 
 We recommend you don't include sensitive information in your enums.
 
-3. We work primarily with Inertia and Vue so the integration looks something like this (noting the async/ await and re use of the route we created earlier)
+3. We work primarily with Inertia and Vue so the integration looks something like this. Note the use of `async`/`await` and reusing the route we created earlier.
 
 ```js
 import { vueEnumPlugin } from "laravel-magic-enums";
@@ -66,7 +66,7 @@ createInertiaApp({
 ...
 ```
 
-4. During development you probably need the page to reload if files change in your enums directory and you may even be interested in types for your typescript so you can update your vite.config.js as follows
+4. During development, you can have Vite reload automatically when your enums change. This is handled by `chokidar`. You might also wish to compile a types definition so your IDE knows the details of the enums. Update your `vite.config.js` as follows. While not necessary, you can also provide a cli command to `prettierCommand` to format the generated TypeScript file according to your project's standards.
 
 You'll notice we provide both the directory and the endpoint.
 
@@ -88,12 +88,13 @@ export default defineConfig({
       enumDir: "./app/Enums",
       enumEndpoint: "http://localhost/api/enums",
       interfaceOutput: "./resources/js/globals.d.ts",
+      prettierCommand: "prettier --write",
     }),
   ],
 ...
 ```
 
-5. Now in your components you can reference your enums as if they were key value objects
+5. Now in your frontend, you can reference your enums as if they were key-value objects.
 
 ```js
 import { useEnums } from 'laravel-magic-enums';
@@ -105,13 +106,13 @@ const { YourEnum, YourOtherEnum } = useEnums();
 
 You may choose to have an array within your enum of a subset of the values for a specific purpose or grouping.
 
-If you use the PHP attribute `SynergiTech\MagicEnums\Attributes\AppendConstToMagic` then an extra enum representing this will be available in the components.
+If you use the PHP attribute `SynergiTech\MagicEnums\Attributes\AppendConstToMagic`, then an extra enum representing this will be available in the frontend.
 
 You may also have an array which maps some or all of the values of the enum to a different string.
 
-If you use the PHP attribute `SynergiTech\MagicEnums\Attributes\AppendValueToMagic` then an extra enum representing this will be available in the components.
+If you use the PHP attribute `SynergiTech\MagicEnums\Attributes\AppendValueToMagic`, then an extra enum representing this will be available in the frontend.
 
-For example
+For example:
 
 ```php
 <?php
@@ -142,7 +143,7 @@ enum TestingEnum: string
 }
 ```
 
-will create the output
+Will create the output:
 
 ```js
 TestingEnum: {
