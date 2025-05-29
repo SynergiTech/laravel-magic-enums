@@ -1,7 +1,11 @@
 build
+dist
+node_modules
 vendor
 composer.lock
+coverage
 coverage-html
 coverage.xml
 .phpunit.cache
 .phpunit.result.cache
+*.tgz
