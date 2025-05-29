@@ -152,7 +152,7 @@ TestingEnum: {
 },
 TestingEnumJustOne: {
   First: "first"
-}
+},
 TestingEnumColours: {
   First: "red"
 }
