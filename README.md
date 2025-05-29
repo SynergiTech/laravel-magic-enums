@@ -1,4 +1,5 @@
-[![JS Tests](https://github.com/SynergiTech/laravel-magic-enums/actions/workflows/js-test.yaml/badge.svg?branch=main)](https://github.com/SynergiTech/laravel-magic-enums/actions/workflows/js-test.yaml) [![PHP Tests](https://github.com/SynergiTech/laravel-magic-enums/actions/workflows/php-test.yaml/badge.svg)](https://github.com/SynergiTech/laravel-magic-enums/actions/workflows/php-test.yaml) [![Tests](https://github.com/SynergiTech/laravel-magic-enums/actions/workflows/test.yaml/badge.svg)](https://github.com/SynergiTech/laravel-magic-enums/actions/workflows/test.yaml)
+[![JS Tests](https://github.com/SynergiTech/laravel-magic-enums/actions/workflows/js-test.yaml/badge.svg?branch=main)](https://github.com/SynergiTech/laravel-magic-enums/actions/workflows/js-test.yaml)
+[![PHP Tests](https://github.com/SynergiTech/laravel-magic-enums/actions/workflows/php-test.yaml/badge.svg)](https://github.com/SynergiTech/laravel-magic-enums/actions/workflows/php-test.yaml)
 
 # Laravel Magic Enums
 
