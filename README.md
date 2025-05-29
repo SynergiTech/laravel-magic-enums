@@ -1,3 +1,5 @@
+[![JS Tests](https://github.com/SynergiTech/laravel-magic-enums/actions/workflows/js-test.yaml/badge.svg?branch=main)](https://github.com/SynergiTech/laravel-magic-enums/actions/workflows/js-test.yaml) [![PHP Tests](https://github.com/SynergiTech/laravel-magic-enums/actions/workflows/php-test.yaml/badge.svg)](https://github.com/SynergiTech/laravel-magic-enums/actions/workflows/php-test.yaml) [![Tests](https://github.com/SynergiTech/laravel-magic-enums/actions/workflows/test.yaml/badge.svg)](https://github.com/SynergiTech/laravel-magic-enums/actions/workflows/test.yaml)
+
 # Laravel Magic Enums
 
 Have you ever wanted to reference your PHP enums in your frontend code but ended up (or didn't want to end up) duplicating them manually? Well here is your answer.
@@ -66,9 +68,11 @@ createInertiaApp({
 ...
 ```
 
-4. During development, you can have Vite reload automatically when your enums change. This is handled by `chokidar`. You might also wish to compile a types definition so your IDE knows the details of the enums. Update your `vite.config.js` as follows. While not necessary, you can also provide a cli command to `prettierCommand` to format the generated TypeScript file according to your project's standards.
+4. During development, you can have Vite reload automatically when your enums change. This is handled by `chokidar`. You might also wish to compile a types definition so your IDE knows the details of the enums. We recommend adding this file to your `.gitignore` file.
 
-You'll notice we provide both the directory and the endpoint.
+While not necessary, you can also provide a cli command to `prettierCommand` to format the generated TypeScript file according to your project's standards.
+
+Update your `vite.config.js` as follows. You'll notice we provide both the directory and the endpoint.
 
 ```js
 import { defineConfig } from 'vite';
@@ -103,6 +107,8 @@ const { YourEnum, YourOtherEnum } = useEnums();
 ```
 
 ## Advanced Usage
+
+### Sub Enums
 
 You may choose to have an array within your enum of a subset of the values for a specific purpose or grouping.
 
@@ -158,3 +164,7 @@ TestingEnumColours: {
   First: "red"
 }
 ```
+
+### Cache and Versioning
+
+To avoid rebuilding the json everytime the endpoint is requested, you can add a file named `VERSION` to your root folder. Magic Enums will determine whether to cache the output based on the time this file was last touched. You can specify a custom cache key in the config.
