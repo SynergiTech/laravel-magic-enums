@@ -1,6 +1,7 @@
 {
   "name": "laravel-magic-enums",
   "version": "1.0.0",
+  "license": "MIT",
   "private": false,
   "type": "module",
   "exports": {
@@ -18,6 +19,12 @@
     "dist/*.d.ts"
   ],
   "types": "./dist/useEnums.d.ts",
+  "description": "A Laravel package that adds extra power to your PHP enums, and lets you use them in your frontend with type definitions.",
+  "keywords": [
+    "laravel",
+    "php",
+    "enums"
+  ],
   "homepage": "https://github.com/SynergiTech/laravel-magic-enums",
   "repository": {
     "type": "git",
