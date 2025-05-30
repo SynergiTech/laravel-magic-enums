@@ -144,7 +144,7 @@ enum TestingEnum: string
     ];
 
     #[AppendValueToMagic]
-    public const COLOURS = [
+    public const COLOUR = [
         self::First->value => 'red',
     ];
 }
@@ -154,15 +154,36 @@ Will create the output:
 
 ```js
 TestingEnum: {
-  First: "first",
-  Second: "second",
-  Third: "third"
+  First: {
+    "name": "First",
+    "value": "first",
+    "text": "first",
+    "label": "first",
+    "colour": "red"
+  },
+  Second: {
+    "name": "Second",
+    "value": "second",
+    "text": "second",
+    "label": "second",
+    "colour": null
+  },
+  Third: {
+    "name": "Third",
+    "value": "third",
+    "text": "third",
+    "label": "third",
+    "colour": null
+  }
 },
 TestingEnumJustOne: {
-  First: "first"
-},
-TestingEnumColours: {
-  First: "red"
+  First: {
+    "name": "First",
+    "value": "first",
+    "text": "first",
+    "label": "first",
+    "colour": "red"
+  }
 }
 ```
 
