@@ -33,10 +33,9 @@ class EnumController
             $enums = collect($paths)
                 ->reject(fn ($i) => $i->isDir() || str_ends_with($i->getRealPath(), '/..'))
                 ->map(function ($item) {
-                    // removing /var/www/a and .php
-                    $path = substr($item->getRealPath(), 10, -4);
-                    $class = sprintf('%s%s', 'A', str_replace(DIRECTORY_SEPARATOR, '\\', $path));
-                    return $class;
+                    // Build the class name from the file path.
+                    $path = ucfirst(str_replace(getcwd() . '/', '', $item->getRealPath()));
+                    return rtrim(str_replace(DIRECTORY_SEPARATOR, '\\', $path), '.php');
                 })
                 ->filter(fn ($i) => method_exists($i, 'toVueArray'))
                 ->values()
