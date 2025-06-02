@@ -6,7 +6,7 @@ use ReflectionEnum;
 use SynergiTech\MagicEnums\Attributes\AppendConstToMagic;
 use SynergiTech\MagicEnums\Attributes\AppendValueToMagic;
 
-trait WithToVueArray
+trait HasMagic
 {
     /**
      * @param self[]|null $only
