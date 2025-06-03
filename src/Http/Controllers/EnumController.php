@@ -36,7 +36,7 @@ class EnumController
                 ->reject(fn ($i) => $i->isDir() || str_ends_with($i->getRealPath(), '/..'))
                 ->map(function ($item) {
                     // Build the class name from the file path.
-                    $path = ucfirst(str_replace(getcwd() . '/', '', $item->getRealPath()));
+                    $path = ucfirst(str_replace(base_path() . '/', '', $item->getRealPath()));
                     return rtrim(str_replace(DIRECTORY_SEPARATOR, '\\', $path), '.php');
                 })
                 ->filter(function ($i) {
