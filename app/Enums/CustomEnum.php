@@ -10,7 +10,7 @@ enum CustomEnum: string implements MagicEnum
 {
     use CustomMagic;
 
-	case Alpha = 'alpha';
+    case Alpha = 'alpha';
     case Beta = 'beta';
     case Charlie = 'charlie';
 
@@ -19,5 +19,5 @@ enum CustomEnum: string implements MagicEnum
         self::Alpha->value => 'delta',
         self::Beta->value => 'echo',
         self::Charlie->value => 'foxtrot',
-	];
+    ];
 }
