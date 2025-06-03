@@ -16,22 +16,23 @@ $ npm install --save laravel-magic-enums
 
 ## Getting Started
 
-1. Add the trait from this package to your enums
+1. Add the trait and interface from this package to your enums
 
 ```php
 <?php
 
 namespace App\Enums;
 
+use SynergiTech\MagicEnums\Interfaces\MagicEnum;
 use SynergiTech\MagicEnums\Traits\HasMagic;
 
-enum YourEnum: string
+enum YourEnum: string implements MagicEnum
 {
     use HasMagic;
 ...
 ```
 
-2. Include the route somewhere in your routes file of choice, in this example we are going to create `/api/enums`.
+1. Include the route somewhere in your routes file of choice, in this example we are going to create `/api/enums`.
 
 ```php
 <?php
@@ -128,9 +129,10 @@ namespace App\Enums;
 
 use SynergiTech\MagicEnums\Attributes\AppendConstToMagic;
 use SynergiTech\MagicEnums\Attributes\AppendValueToMagic;
+use SynergiTech\MagicEnums\Interfaces\MagicEnum;
 use SynergiTech\MagicEnums\Traits\HasMagic;
 
-enum TestingEnum: string
+enum TestingEnum: string implements MagicEnum
 {
     use HasMagic;
 
@@ -157,22 +159,16 @@ TestingEnum: {
   First: {
     "name": "First",
     "value": "first",
-    "text": "first",
-    "label": "first",
     "colour": "red"
   },
   Second: {
     "name": "Second",
     "value": "second",
-    "text": "second",
-    "label": "second",
     "colour": null
   },
   Third: {
     "name": "Third",
     "value": "third",
-    "text": "third",
-    "label": "third",
     "colour": null
   }
 },
@@ -180,8 +176,6 @@ TestingEnumJustOne: {
   First: {
     "name": "First",
     "value": "first",
-    "text": "first",
-    "label": "first",
     "colour": "red"
   }
 }
@@ -190,3 +184,7 @@ TestingEnumJustOne: {
 ### Cache and Versioning
 
 To avoid rebuilding the json everytime the endpoint is requested, you can add a file named `VERSION` to your root folder. Magic Enums will determine whether to cache the output based on the time this file was last touched. You can specify a custom cache key in the config.
+
+### Extending
+
+If you wish to have more control over appending values to your magic enums for the frontend, you can extend the current trait using something along the lines of [app/Traits/CustomMagic.php](app/Traits/CustomMagic.php) as long as you always follow the interface and provide the function.
