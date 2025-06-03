@@ -2,12 +2,14 @@
 
 namespace SynergiTech\MagicEnums\Http\Controllers;
 
+use App\Enums\TestingEnum;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use SynergiTech\MagicEnums\Interfaces\MagicEnum;
 
 class EnumController
 {
@@ -37,17 +39,20 @@ class EnumController
                     $path = ucfirst(str_replace(getcwd() . '/', '', $item->getRealPath()));
                     return rtrim(str_replace(DIRECTORY_SEPARATOR, '\\', $path), '.php');
                 })
-                ->filter(fn ($i) => method_exists($i, 'toVueArray'))
+                ->filter(function ($i) {
+                    $cases = $i::cases();
+                    return reset($cases) instanceof MagicEnum;
+                })
                 ->values()
                 ->toArray();
 
             foreach ($enums as $class) {
                 $classKey = str_replace([config('magicenums.enum_namespace'), '\\'], '', $class);
 
-                $values[$classKey] = $class::toVueArray();
+                $values[$classKey] = $class::toMagicArray();
                 foreach ($class::getConsts() as $exposed) {
                     $constKey = Str::of($exposed)->lower()->studly();
-                    $values[$classKey . $constKey] = $class::toVueArray(only: constant("{$class}::{$exposed}"));
+                    $values[$classKey . $constKey] = $class::toMagicArray(only: constant("{$class}::{$exposed}"));
                 }
             }
 

@@ -4,11 +4,12 @@ namespace App\Enums;
 
 use SynergiTech\MagicEnums\Attributes\AppendConstToMagic;
 use SynergiTech\MagicEnums\Attributes\AppendValueToMagic;
-use SynergiTech\MagicEnums\Traits\WithToVueArray;
+use SynergiTech\MagicEnums\Interfaces\MagicEnum;
+use SynergiTech\MagicEnums\Traits\HasMagic;
 
-enum TestingEnum: string
+enum TestingEnum: string implements MagicEnum
 {
-    use WithToVueArray;
+    use HasMagic;
 
     case First = 'first';
     case Second = 'second';
