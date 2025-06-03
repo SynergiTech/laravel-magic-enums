@@ -12,7 +12,7 @@ trait HasMagic
      * @param self[]|null $only
      * @return array<string,array<string,mixed>>
      */
-    public static function toVueArray(?array $only = null): array
+    public static function toMagicArray(?array $only = null): array
     {
         $info = [];
 
@@ -24,8 +24,6 @@ trait HasMagic
             $data = [
                 'name' => $case->name,
                 'value' => $case->value,
-                'text' => $case->value,
-                'label' => $case->value,
             ];
 
             foreach (self::getValues() as $value) {
