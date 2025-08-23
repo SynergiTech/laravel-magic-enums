@@ -1,5 +1,4 @@
-// @ts-expect-error This is okay, we're hacking.
-const enums: LaravelMagicEnums = {};
+const enums: Record<string, unknown> = {};
 
 export function setEnums(options: { [x: string]: never }) {
   for (const key in options) {
@@ -25,12 +24,9 @@ export function setEnums(options: { [x: string]: never }) {
 }
 
 export async function vueEnumPlugin(path: string) {
-  const enumResponse = await fetch(path);
-  const enums = await enumResponse.json();
-
   return {
-    install() {
-      setEnums(enums);
+    async install() {
+      setEnums(await import(path));
     },
   };
 }
