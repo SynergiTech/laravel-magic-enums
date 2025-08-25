@@ -9,3 +9,5 @@ coverage.xml
 .phpunit.cache
 .phpunit.result.cache
 *.tgz
+workbench/bootstrap/cache  
+workbench/storage/logs 

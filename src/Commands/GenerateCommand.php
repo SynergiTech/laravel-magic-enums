@@ -3,16 +3,18 @@
 namespace SynergiTech\MagicEnums\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;  
+use Illuminate\Filesystem\Filesystem; 
 use Illuminate\Support\Str;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SynergiTech\MagicEnums\Interfaces\MagicEnum;
 
+use function Illuminate\Filesystem\join_paths;
+
 class GenerateCommand extends Command
 {
-    protected $signature = 'laravel-magic-enums:generate {--input} {--output=}';
-    protected $description = 'Generate a JSON file containing all MagicEnum values.';
+    protected $signature = 'laravel-magic-enums:generate {--input=app/Enums} {--output=resources/js/magic-enums} {--format} {--prettier=}';
+    protected $description = 'Export enums to your frontend.';
 
     public function __construct(
         private Filesystem $files
@@ -20,8 +22,17 @@ class GenerateCommand extends Command
         parent::__construct();
     }
 
+    public function handle()
+    {  
+        $output = $this->readEnumsAsJson($this->base());
+        $this->writeFiles($this->option('output'), $output);
 
-    protected function readEnumsAsJson(string $path)
+        if ($this->option('format')) {
+            $this->runPrettier($this->option('output'));
+        }
+    }
+    
+    private function readEnumsAsJson(string $path)
     {
         $values = [];
 
@@ -59,15 +70,54 @@ class GenerateCommand extends Command
         return json_encode($values);
     }
 
-    protected function writeFiles($path, $content)
+    private function jsFilePath(string $path): string
     {
-        $this->files->ensureDirectoryExists(dirname($path));
-        $this->files->put($path, $content);
+        return join_paths($path, 'index.js');
     }
 
-    public function handle()
+    private function dtsFilePath(string $path): string
     {
-        $output = $this->readEnumsAsJson($this->option('input'));
-        $this->writeFiles($this->option('output'), $output);
+        return join_paths($path, 'useEnums.d.ts');
+    }
+
+    private function writeFiles($path, $content)
+    { 
+        $jsContent = <<<JAVASCRIPT
+export const enums = {$content};
+JAVASCRIPT;
+
+        $this->files->ensureDirectoryExists(dirname($this->option('input')));
+
+        if ($this->files->exists($path)) {
+            $this->files->deleteDirectory($path);
+        }
+ 
+        $this->files->makeDirectory($path); 
+
+        $this->files->put($this->jsFilePath($path), $jsContent);
+
+        $dtsContent = <<<TYPESCRIPT
+import { enums } from '.';
+
+declare module 'useEnums.ts' {
+  export function useEnums(): typeof enums;
+}
+TYPESCRIPT;
+
+        $this->files->put($this->dtsFilePath($path), $dtsContent);
+
+        $this->info("Wrote enums to {$this->jsFilePath($path)}!");
+    }
+
+    private function runPrettier(string $path, string $prettierCommand = 'npx prettier'): void
+    {
+        $prettier = $this->option('prettier') ?: $prettierCommand;
+
+        exec("{$prettier} --write {$path}");
+    }
+
+    private function base(): string
+    {
+        return join_paths(base_path(), $this->option('input'));
     }
 }

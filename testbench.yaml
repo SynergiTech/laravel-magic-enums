@@ -1,6 +1,8 @@
 providers:
   - App\Providers\WorkbenchServiceProvider
 
+laravel: ./workbench
+
 workbench:
   start: '/'
   install: true

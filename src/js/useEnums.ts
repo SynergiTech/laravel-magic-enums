@@ -1,6 +1,7 @@
-const enums: Record<string, unknown> = {};
+type MagicEnum = Record<string, unknown>;
+const enums: MagicEnum = {};
 
-export function setEnums(options: { [x: string]: never }) {
+export function setEnums(options: Record<string, MagicEnum>) {
   for (const key in options) {
     enums[key] = new Proxy(options[key], {
       get(target, prop) {
