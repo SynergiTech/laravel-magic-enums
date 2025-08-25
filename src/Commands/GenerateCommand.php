@@ -1,6 +1,6 @@
 <?php
 
-namespace SynergiTech\MagicEnums;
+namespace SynergiTech\MagicEnums\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;  

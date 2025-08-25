@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits;
+namespace Workbench\App\Traits;
 
 use SynergiTech\MagicEnums\Traits\HasMagic;
 

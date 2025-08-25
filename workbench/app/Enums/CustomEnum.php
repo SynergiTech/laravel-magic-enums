@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Enums;
-
-use App\Traits\CustomMagic;
+ 
 use SynergiTech\MagicEnums\Attributes\AppendValueToMagic;
 use SynergiTech\MagicEnums\Interfaces\MagicEnum;
+use Workbench\App\Traits\CustomMagic;
 
 enum CustomEnum: string implements MagicEnum
 {
