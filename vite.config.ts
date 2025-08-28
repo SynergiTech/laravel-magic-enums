@@ -1,7 +1,8 @@
-import { defineConfig, type UserConfig } from 'vite';
+import { type UserConfig } from 'vite';
 import { resolve } from 'node:path';
 import dts from 'vite-plugin-dts';
 import { fileURLToPath, URL } from 'node:url';
+import { defineConfig, configDefaults } from 'vitest/config';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -43,6 +44,20 @@ export default defineConfig(({ mode }) => {
       },
     };
   }
+  baseConfig.test = {
+    exclude: [...configDefaults.exclude],
+    watch: false,
+    coverage: {
+      provider: 'v8',
+      include: ['src/js'],
+      /*  thresholds: {
+          branches: 50,
+          functions: 50,
+          lines: 50,
+          statements: 50,
+        }, */
+    },
+  };
 
   // For testing, etc.
   return {

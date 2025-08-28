@@ -84,15 +84,30 @@ class GenerateCommand extends Command
         return join_paths($path, 'index.js');
     }
 
-    private function dtsFilePath(string $path): string
-    {
-        return join_paths($path, 'useEnums.d.ts');
-    }
-
     private function writeFiles($path, $content)
     { 
         $jsContent = <<<JAVASCRIPT
-export const enums = {$content};
+export const enums = {$content}; 
+for (const key in enums) {
+    enums[key] = new Proxy(enums[key], {
+        get(target, prop) {
+            if (typeof prop !== 'string') {
+                return false;
+            }
+
+            const normalisedKey = prop.replaceAll(' ', '');
+
+            if (Reflect.has(target, normalisedKey)) {
+                return Reflect.get(target, normalisedKey);
+            }
+
+            return false;
+        },
+    });
+}
+
+// Prevent mutations.
+Object.freeze(enums); 
 JAVASCRIPT;
 
         $this->files->ensureDirectoryExists(dirname($this->option('input')));
@@ -104,16 +119,6 @@ JAVASCRIPT;
         $this->files->makeDirectory($path); 
 
         $this->files->put($this->jsFilePath($path), $jsContent);
-
-        $dtsContent = <<<TYPESCRIPT
-import { enums } from '.';
-
-declare module 'useEnums.ts' {
-  export function useEnums(): typeof enums;
-}
-TYPESCRIPT;
-
-        $this->files->put($this->dtsFilePath($path), $dtsContent);
 
         $this->info("Wrote enums to {$this->jsFilePath($path)}!");
     }

@@ -1,7 +1,6 @@
-import { execSync } from 'child_process';
 import chokidar, { type FSWatcher, type ChokidarOptions } from 'chokidar';
 import type { Plugin } from 'vite';
-import path from 'node:path';
+import { artisan } from './utils';
 
 interface PluginOptions {
   /**
@@ -23,6 +22,11 @@ interface PluginOptions {
    * @default undefined
    */
   prettier?: string;
+  /**
+   * Whether to format the generated file with `--format` flag.
+   * @default false
+   */
+  format?: boolean;
 }
 
 const defaultChokidarOptions: ChokidarOptions = {
@@ -34,12 +38,6 @@ const defaultChokidarOptions: ChokidarOptions = {
   persistent: false,
   interval: 300,
 };
-
-const testbenchDir = path.join(__dirname, 'vendor', 'bin', 'testbench');
-
-function artisan(command: string): void {
-  console.error(execSync(`${testbenchDir} ${command}`).toString('utf8'));
-}
 
 export function laravelMagicEnums(options: PluginOptions): Plugin {
   let fsWatcher: FSWatcher | null = null;
@@ -63,15 +61,19 @@ export function laravelMagicEnums(options: PluginOptions): Plugin {
   async function regenerate() {
     console.info('Rebuilding enums file...');
 
-    artisan(
-      `laravel-magic-enums:generate \
-        --input=${pluginConfig.input} \
-        --output=${pluginConfig.output}`,
-    );
+    let command = `laravel-magic-enums:generate \
+      --input=${pluginConfig.input}
+      --output=${pluginConfig.output}`;
+
+    if (pluginConfig.format) {
+      command += `--format`;
+    }
 
     if (pluginConfig.prettier) {
-      execSync(`${pluginConfig.prettier} --write ${pluginConfig.output}`);
+      command += `--prettier="${pluginConfig.prettier}"`;
     }
+
+    artisan(command);
 
     console.info('... Rebuilt enums file!');
   }
