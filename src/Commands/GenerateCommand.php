@@ -55,13 +55,22 @@ class GenerateCommand extends Command
             })
             ->values()
             ->toArray();
+ 
+        $rootNamespace = $this->determineRootNamespace($enums);
 
         foreach ($enums as $class) {
-            $classKey = str_replace([config('magicenums.enum_namespace'), '\\'], '', $class);
+            $classKey = Str::of($class)
+                ->chopStart($rootNamespace)
+                ->replace('\\', '')
+                ->toString();
 
             $values[$classKey] = $class::toMagicArray();
+
             foreach ($class::getConsts() as $exposed) {
-                $constKey = Str::of($exposed)->lower()->studly();
+                $constKey = Str::of($exposed)
+                    ->lower()
+                    ->studly();
+
                 $values[$classKey . $constKey] = $class::toMagicArray(only: constant("{$class}::{$exposed}"));
             }
         }
@@ -119,5 +128,31 @@ TYPESCRIPT;
     private function base(): string
     {
         return join_paths(base_path(), $this->option('input'));
+    }
+
+    private function determineRootNamespace(array $classes): string
+    {
+        // Loop through the array of enum class names. Find the root namespace that all enums share.
+        // This is done by finding the longest common prefix of all class names.
+        // Then, remove that prefix from each class name to get the relative class name.
+        // Finally, use that relative class name as the key in the output array.
+        if (count($classes) === 0) {
+            return '';
+        }
+
+        $commonPrefix = $classes[0];
+        foreach ($classes as $class) {
+            $i = 0;
+            while (isset($commonPrefix[$i], $class[$i]) && $commonPrefix[$i] === $class[$i]) {
+                $i++;
+            }
+            $commonPrefix = substr($commonPrefix, 0, $i);
+        }
+        // Ensure prefix ends at a namespace separator
+        $lastSep = strrpos($commonPrefix, '\\');
+        if ($lastSep !== false) {
+            return substr($commonPrefix, 0, $lastSep + 1);
+        }
+        return '';
     }
 }
