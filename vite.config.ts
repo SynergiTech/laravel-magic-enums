@@ -39,7 +39,7 @@ export default defineConfig(({ mode }) => {
           formats: ['es', 'cjs'],
         },
         rollupOptions: {
-          external: ['fs', 'path', 'chokidar', 'child_process'],
+          external: ['node:fs', 'node:path', 'node:child_process', 'chokidar'],
         },
       },
     };
