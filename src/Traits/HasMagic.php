@@ -9,7 +9,7 @@ use SynergiTech\MagicEnums\Attributes\AppendValueToMagic;
 trait HasMagic
 {
     /**
-     * @param self[]|null $only
+     * @param  self[]|null $only
      * @return array<string,array<string,mixed>>
      */
     public static function toMagicArray(?array $only = null): array

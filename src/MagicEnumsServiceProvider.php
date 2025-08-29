@@ -10,9 +10,11 @@ class MagicEnumsServiceProvider extends ServiceProvider
     public function boot(): void
     {        
         if ($this->app->runningInConsole()) {
-            $this->commands([
+            $this->commands(
+                [
                 GenerateCommand::class,
-            ]);
+                ]
+            );
         }
     }
 }

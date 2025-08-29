@@ -32,7 +32,7 @@
   },
   "autoload": {
     "psr-4": {
-      "SynergiTech\\MagicEnums\\": "src"
+      "SynergiTech\\MagicEnums\\": "src/"
     }
   },
   "autoload-dev": {

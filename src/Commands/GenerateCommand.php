@@ -36,19 +36,27 @@ class GenerateCommand extends Command
     {
         $values = [];
 
-        /** @var iterable<string,\SplFileInfo> */
+        /**
+ * @var iterable<string,\SplFileInfo> 
+*/
         $paths = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
 
-        /** @var array<string,string> $enums */
+        /**
+ * @var array<string,string> $enums 
+*/
         $enums = collect($paths)
             ->reject(fn ($i) => $i->isDir() || str_ends_with($i->getRealPath(), '/..'))
-            ->map(function ($item) { 
-                return $this->fqcnFromPath($item->getRealPath());
-            })
-            ->filter(function ($i) {
-                $cases = $i::cases();
-                return reset($cases) instanceof MagicEnum;
-            })
+            ->map(
+                function ($item) { 
+                    return $this->fqcnFromPath($item->getRealPath());
+                }
+            )
+            ->filter(
+                function ($i) {
+                    $cases = $i::cases();
+                    return reset($cases) instanceof MagicEnum;
+                }
+            )
             ->values()
             ->toArray();
   
@@ -71,7 +79,9 @@ class GenerateCommand extends Command
             }
         }
 
-        /** @var array<string,array<string,string>> $values */
+        /**
+ * @var array<string,array<string,string>> $values 
+*/
         return json_encode($values);
     }
 
