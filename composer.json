@@ -1,89 +1,89 @@
 {
-    "name": "synergitech/laravel-magic-enums",
-    "type": "library",
-    "license": "MIT",
-    "homepage": "https://github.com/SynergiTech/laravel-magic-enums",
-    "description": "A Laravel package that adds extra power to your PHP enums, and lets you use them in your frontend with type definitions.",
-    "keywords": [
-        "laravel",
-        "php",
-        "enums"
-    ],
-    "authors": [
-        {
-            "name": "Synergi Tech",
-            "homepage": "http://github.com/SynergiTech"
-        }
-    ],
-    "support": {
-        "issues": "https://github.com/SynergiTech/laravel-magic-enums/issues"
-    },
-    "require": {
-        "php": "^8.2",
-        "laravel/framework": ">=9.0"
-    },
-    "require-dev": {
-        "larastan/larastan": "^2.0|^3.0",
-        "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0",
-        "php-parallel-lint/php-parallel-lint": "^1.4",
-        "phpstan/extension-installer": "^1.4",
-        "phpunit/phpunit": "^9.0|^10.0|^11.0",
-        "squizlabs/php_codesniffer": "^3.13"
-    },
-    "autoload": {
-        "psr-4": {
-            "SynergiTech\\MagicEnums\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "App\\": "workbench/app/",
-            "SynergiTech\\MagicEnums\\Tests\\": "tests/",
-            "Workbench\\App\\": "workbench/app/",
-            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
-            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
-        }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "SynergiTech\\MagicEnums\\MagicEnumsServiceProvider"
-            ]
-        }
-    },
-    "scripts": {
-        "analyse": [
-            "phpstan analyse --memory-limit 2G --level 8 app tests"
-        ],
-        "lint": [
-            "parallel-lint --exclude vendor .",
-            "phpcs --standard=PSR12 src/ tests/"
-        ],
-        "test": [
-            "Composer\\Config::disableProcessTimeout",
-            "@lint",
-            "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text",
-            "@analyse"
-        ],
-        "post-autoload-dump": [
-            "@clear",
-            "@prepare"
-        ],
-        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
-        "prepare": "@php vendor/bin/testbench package:discover --ansi",
-        "build": "@php vendor/bin/testbench workbench:build --ansi",
-        "serve": [
-            "Composer\\Config::disableProcessTimeout",
-            "@build",
-            "@php vendor/bin/testbench serve --ansi"
-        ]
-    },
-    "config": {
-        "optimize-autoloader": true,
-        "preferred-install": "dist",
-        "sort-packages": true,
-        "allow-plugins": {
-            "phpstan/extension-installer": true
-        }
+  "name": "synergitech/laravel-magic-enums",
+  "type": "library",
+  "license": "MIT",
+  "homepage": "https://github.com/SynergiTech/laravel-magic-enums",
+  "description": "A Laravel package that adds extra power to your PHP enums, and lets you use them in your frontend with type definitions.",
+  "keywords": [
+    "laravel",
+    "php",
+    "enums"
+  ],
+  "authors": [
+    {
+      "name": "Synergi Tech",
+      "homepage": "http://github.com/SynergiTech"
     }
+  ],
+  "support": {
+    "issues": "https://github.com/SynergiTech/laravel-magic-enums/issues"
+  },
+  "require": {
+    "php": "^8.2",
+    "laravel/framework": ">=9.0"
+  },
+  "require-dev": {
+    "larastan/larastan": "^2.0|^3.0",
+    "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0",
+    "php-parallel-lint/php-parallel-lint": "^1.4",
+    "phpstan/extension-installer": "^1.4",
+    "phpunit/phpunit": "^9.0|^10.0|^11.0",
+    "squizlabs/php_codesniffer": "^3.13"
+  },
+  "autoload": {
+    "psr-4": {
+      "SynergiTech\\MagicEnums\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "App\\": "workbench/app/",
+      "SynergiTech\\MagicEnums\\Tests\\": "tests/",
+      "Workbench\\App\\": "workbench/app/",
+      "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+      "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "SynergiTech\\MagicEnums\\MagicEnumsServiceProvider"
+      ]
+    }
+  },
+  "scripts": {
+    "analyse": [
+      "phpstan analyse --memory-limit 2G --level 8 app tests"
+    ],
+    "lint": [
+      "parallel-lint --exclude vendor .",
+      "phpcs --standard=PSR12 src/ tests/"
+    ],
+    "test": [
+      "Composer\\Config::disableProcessTimeout",
+      "@lint",
+      "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text",
+      "@analyse"
+    ],
+    "post-autoload-dump": [
+      "@clear",
+      "@prepare"
+    ],
+    "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+    "prepare": "@php vendor/bin/testbench package:discover --ansi",
+    "build": "@php vendor/bin/testbench workbench:build --ansi",
+    "serve": [
+      "Composer\\Config::disableProcessTimeout",
+      "@build",
+      "@php vendor/bin/testbench serve --ansi"
+    ]
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "allow-plugins": {
+      "phpstan/extension-installer": true
+    }
+  }
 }

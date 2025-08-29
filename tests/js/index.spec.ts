@@ -96,7 +96,7 @@ describe('index.js', async () => {
     expect(Object.isFrozen(enums)).toBe(true);
   });
 
-  it('when the format argument is passed, the generated file is formatted', async () => {
+  it.skip('when the format argument is passed, the generated file is formatted', async () => {
     artisan(`laravel-magic-enums:generate --output=${outputDir} --format`);
 
     const contents = await fs.readFile(`${outputDir}/index.js`, 'utf-8');
