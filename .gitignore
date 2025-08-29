@@ -11,3 +11,4 @@ coverage.xml
 *.tgz
 workbench/bootstrap/cache  
 workbench/storage/logs 
+workbench/resources/js/enums

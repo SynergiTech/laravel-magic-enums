@@ -1,12 +1,17 @@
 import { artisan } from '@/utils.js';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { promises as fs } from 'node:fs';
+import { check } from 'prettier';
 
 describe('index.js', async () => {
+  const outputDir = 'workbench/resources/js/enums';
+  let i = 0;
+
   async function importEnums() {
+    i++;
     const { enums } = await import(
-      // @ts-expect-error This is generated
-      '../../workbench/resources/js/laravel-magic-enums/index.js'
+      '../../workbench/resources/js/enums/index.js?t=' + i
     );
 
     return enums;
@@ -17,9 +22,7 @@ describe('index.js', async () => {
   });
 
   it('matches the expected structure', async () => {
-    artisan(
-      'laravel-magic-enums:generate --output=workbench/resources/js/laravel-magic-enums',
-    );
+    artisan(`laravel-magic-enums:generate --output=${outputDir}`);
 
     const enums = await importEnums();
 
@@ -70,9 +73,7 @@ describe('index.js', async () => {
   });
 
   it('resolves enum values with spaces to their name', async () => {
-    artisan(
-      'laravel-magic-enums:generate --output=workbench/resources/js/laravel-magic-enums',
-    );
+    artisan(`laravel-magic-enums:generate --output=${outputDir}`);
 
     const enums = await importEnums();
 
@@ -88,12 +89,25 @@ describe('index.js', async () => {
   });
 
   it('the exported enums are frozen', async () => {
-    artisan(
-      'laravel-magic-enums:generate --output=workbench/resources/js/laravel-magic-enums',
-    );
+    artisan(`laravel-magic-enums:generate --output=${outputDir}`);
 
     const enums = await importEnums();
 
     expect(Object.isFrozen(enums)).toBe(true);
+  });
+
+  it('when the format argument is passed, the generated file is formatted', async () => {
+    artisan(`laravel-magic-enums:generate --output=${outputDir} --format`);
+
+    const contents = await fs.readFile(`${outputDir}/index.js`, 'utf-8');
+
+    const formatted = await check(contents, {
+      parser: 'typescript',
+      semi: true,
+      trailingComma: 'all',
+      singleQuote: true,
+    });
+
+    expect(formatted).toBe(true);
   });
 });

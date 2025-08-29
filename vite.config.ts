@@ -46,7 +46,6 @@ export default defineConfig(({ mode }) => {
   }
   baseConfig.test = {
     exclude: [...configDefaults.exclude],
-    watch: false,
     coverage: {
       provider: 'v8',
       include: ['src/js'],
