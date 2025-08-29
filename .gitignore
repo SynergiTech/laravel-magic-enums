@@ -12,3 +12,4 @@ coverage.xml
 workbench/bootstrap/cache  
 workbench/storage/logs 
 workbench/resources/js/enums
+enums

@@ -42,12 +42,8 @@ class GenerateCommand extends Command
         /** @var array<string,string> $enums */
         $enums = collect($paths)
             ->reject(fn ($i) => $i->isDir() || str_ends_with($i->getRealPath(), '/..'))
-            ->map(function ($item) {
-                // Build the class name from the file path.
-                $cwd = (app()->runningUnitTests()) ? getcwd() : base_path();
-
-                $path = ucfirst(str_replace($cwd . '/', '', $item->getRealPath()));
-                return rtrim(str_replace(DIRECTORY_SEPARATOR, '\\', $path), '.php');
+            ->map(function ($item) { 
+                return $this->fqcnFromPath($item->getRealPath());
             })
             ->filter(function ($i) {
                 $cases = $i::cases();
@@ -55,7 +51,7 @@ class GenerateCommand extends Command
             })
             ->values()
             ->toArray();
- 
+  
         $rootNamespace = $this->determineRootNamespace($enums);
 
         foreach ($enums as $class) {
@@ -105,8 +101,6 @@ for (const key in enums) {
         },
     });
 }
-
-// Prevent mutations.
 Object.freeze(enums); 
 JAVASCRIPT;
 
@@ -116,7 +110,10 @@ JAVASCRIPT;
             $this->files->deleteDirectory($path);
         }
  
-        $this->files->makeDirectory($path); 
+        $this->files->makeDirectory(
+            path: $path,
+            recursive: true,
+        ); 
 
         $this->files->put($this->jsFilePath($path), $jsContent);
 
@@ -159,5 +156,47 @@ JAVASCRIPT;
             return substr($commonPrefix, 0, $lastSep + 1);
         }
         return '';
+    }
+
+    protected function fqcnFromPath(string $path): string
+    {
+        $namespace = $class = $buffer = '';
+
+        $handle = fopen($path, 'r');
+
+        while (!feof($handle)) {
+            $buffer .= fread($handle, 512);
+
+            // Suppress warnings for cases where `$buffer` ends in the middle of a PHP comment.
+            $tokens = @token_get_all($buffer);
+
+            // Filter out whitespace and comments from the tokens, as they are irrelevant.
+            $tokens = array_filter($tokens, fn($token) => $token[0] !== T_WHITESPACE && $token[0] !== T_COMMENT);
+
+            // Reset array indexes after filtering.
+            $tokens = array_values($tokens);
+
+            foreach ($tokens as $index => $token) {
+                // The namespace is a `T_NAME_QUALIFIED` that is immediately preceded by a `T_NAMESPACE`.
+                if ($token[0] === T_NAMESPACE && isset($tokens[$index + 1]) && $tokens[$index + 1][0] === T_NAME_QUALIFIED) {
+                    $namespace = $tokens[$index + 1][1];
+                    continue;
+                }
+
+                // The class name is a `T_STRING` which makes it unreliable to match against, so check if we have a
+                // `T_ENUM` token with a `T_STRING` token ahead of it.
+                if ($token[0] === T_ENUM && isset($tokens[$index + 1]) && $tokens[$index + 1][0] === T_STRING) {
+                    $class = $tokens[$index + 1][1];
+                }
+            }
+
+            if ($namespace && $class) {
+                // We've found both the namespace and the class, we can now stop reading and parsing the file.
+                break;
+            }
+        }
+
+        fclose($handle);
+        return $namespace.'\\'.$class;
     }
 }

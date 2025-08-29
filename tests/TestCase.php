@@ -4,9 +4,12 @@ namespace SynergiTech\MagicEnums\Tests;
 
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use SynergiTech\MagicEnums\Facades\MagicEnumsRouteFacade;
+use Orchestra\Testbench\Concerns\WithWorkbench; 
 
 class TestCase extends OrchestraTestCase
 {
+    use WithWorkbench; 
+
     protected function getPackageProviders($app)
     {
         return [\SynergiTech\MagicEnums\MagicEnumsServiceProvider::class];
