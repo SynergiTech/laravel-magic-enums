@@ -3,7 +3,7 @@
 namespace SynergiTech\MagicEnums\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem; 
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -13,7 +13,12 @@ use function Illuminate\Filesystem\join_paths;
 
 class GenerateCommand extends Command
 {
-    protected $signature = 'laravel-magic-enums:generate {--input=app/Enums} {--output=resources/js/magic-enums} {--format} {--prettier=}';
+    protected $signature = 'laravel-magic-enums:generate 
+        {--input=app/Enums}
+        {--output=resources/js/magic-enums}
+        {--format}
+        {--prettier=}';
+
     protected $description = 'Export enums to your frontend.';
 
     public function __construct(
@@ -23,7 +28,7 @@ class GenerateCommand extends Command
     }
 
     public function handle()
-    {  
+    {
         $output = $this->readEnumsAsJson($this->base());
         $this->writeFiles($this->option('output'), $output);
 
@@ -31,23 +36,23 @@ class GenerateCommand extends Command
             $this->runPrettier($this->option('output'));
         }
     }
-    
+
     private function readEnumsAsJson(string $path)
     {
         $values = [];
 
         /**
- * @var iterable<string,\SplFileInfo> 
+ * @var iterable<string,\SplFileInfo>
 */
         $paths = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
 
         /**
- * @var array<string,string> $enums 
+ * @var array<string,string> $enums
 */
         $enums = collect($paths)
             ->reject(fn ($i) => $i->isDir() || str_ends_with($i->getRealPath(), '/..'))
             ->map(
-                function ($item) { 
+                function ($item) {
                     return $this->fqcnFromPath($item->getRealPath());
                 }
             )
@@ -59,7 +64,7 @@ class GenerateCommand extends Command
             )
             ->values()
             ->toArray();
-  
+
         $rootNamespace = $this->determineRootNamespace($enums);
 
         foreach ($enums as $class) {
@@ -80,7 +85,7 @@ class GenerateCommand extends Command
         }
 
         /**
- * @var array<string,array<string,string>> $values 
+ * @var array<string,array<string,string>> $values
 */
         return json_encode($values);
     }
@@ -91,7 +96,7 @@ class GenerateCommand extends Command
     }
 
     private function writeFiles($path, $content)
-    { 
+    {
         $jsContent = <<<JAVASCRIPT
 export const enums = {$content}; 
 for (const key in enums) {
@@ -119,11 +124,11 @@ JAVASCRIPT;
         if ($this->files->exists($path)) {
             $this->files->deleteDirectory($path);
         }
- 
+
         $this->files->makeDirectory(
             path: $path,
             recursive: true,
-        ); 
+        );
 
         $this->files->put($this->jsFilePath($path), $jsContent);
 
@@ -188,7 +193,10 @@ JAVASCRIPT;
 
             foreach ($tokens as $index => $token) {
                 // The namespace is a `T_NAME_QUALIFIED` that is immediately preceded by a `T_NAMESPACE`.
-                if ($token[0] === T_NAMESPACE && isset($tokens[$index + 1]) && $tokens[$index + 1][0] === T_NAME_QUALIFIED) {
+                if (
+                    $token[0] === T_NAMESPACE && isset($tokens[$index + 1])
+                    && $tokens[$index + 1][0] === T_NAME_QUALIFIED
+                ) {
                     $namespace = $tokens[$index + 1][1];
                     continue;
                 }
@@ -207,6 +215,6 @@ JAVASCRIPT;
         }
 
         fclose($handle);
-        return $namespace.'\\'.$class;
+        return $namespace . '\\' . $class;
     }
 }

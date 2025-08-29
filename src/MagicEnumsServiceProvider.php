@@ -8,7 +8,7 @@ use SynergiTech\MagicEnums\Commands\GenerateCommand;
 class MagicEnumsServiceProvider extends ServiceProvider
 {
     public function boot(): void
-    {        
+    {
         if ($this->app->runningInConsole()) {
             $this->commands(
                 [

@@ -57,7 +57,7 @@
     ],
     "lint": [
       "parallel-lint --exclude vendor .",
-      "phpcs --standard=PSR12 src/ tests/"
+      "phpcs --standard=PSR12 src tests"
     ],
     "test": [
       "Composer\\Config::disableProcessTimeout",

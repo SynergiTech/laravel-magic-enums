@@ -11,7 +11,9 @@ class GenerateCommandTest extends TestCase
     {
         Storage::fake();
 
-        $result = $this->artisan('laravel-magic-enums:generate --input=app/Enums --output=enums --format');
+        $result = $this
+            ->artisan('laravel-magic-enums:generate --input=app/Enums --output=enums --format')
+            ->run();
 
         $this->assertSame(0, $result);
 
