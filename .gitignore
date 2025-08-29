@@ -9,7 +9,9 @@ coverage.xml
 .phpunit.cache
 .phpunit.result.cache
 *.tgz
-workbench/bootstrap/cache/*
+workbench/bootstrap/cache/packages.php
+workbench/bootstrap/cache/services.php
+workbench/bootstrap/cache/testbench.yaml
 workbench/storage/logs 
 workbench/resources/js/enums
 enums
