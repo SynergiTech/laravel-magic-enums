@@ -32,7 +32,7 @@ class GenerateCommand extends Command
         $output = $this->readEnumsAsJson($this->base());
         $this->writeFiles($this->option('output'), $output);
 
-        if ($this->option('format')) { 
+        if ($this->option('format')) {
             $this->runPrettier($this->option('output'));
         }
     }
@@ -137,7 +137,7 @@ JAVASCRIPT;
 
     private function runPrettier(string $path, string $prettierCommand = 'npx prettier'): void
     {
-        $prettier = $this->option('prettier') ?: $prettierCommand; 
+        $prettier = $this->option('prettier') ?: $prettierCommand;
         exec("{$prettier} {$path} --write");
     }
 
