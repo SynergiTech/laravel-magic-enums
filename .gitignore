@@ -12,6 +12,6 @@ coverage.xml
 workbench/bootstrap/cache/packages.php
 workbench/bootstrap/cache/services.php
 workbench/bootstrap/cache/testbench.yaml
-workbench/storage/logs 
-workbench/resources/js/enums
+workbench/storage/logs   
+resources/js/magic-enums
 enums

@@ -16,7 +16,7 @@ class GenerateCommand extends Command
     protected $signature = 'laravel-magic-enums:generate 
         {--input=app/Enums}
         {--output=resources/js/magic-enums}
-        {--format}
+        {--format=false}
         {--prettier=}';
 
     protected $description = 'Export enums to your frontend.';
@@ -32,7 +32,7 @@ class GenerateCommand extends Command
         $output = $this->readEnumsAsJson($this->base());
         $this->writeFiles($this->option('output'), $output);
 
-        if ($this->option('format')) {
+        if ($this->option('format')) { 
             $this->runPrettier($this->option('output'));
         }
     }
@@ -101,8 +101,8 @@ class GenerateCommand extends Command
 export const enums = {$content}; 
 for (const key in enums) {
     enums[key] = new Proxy(enums[key], {
-        get(target, prop) {
-            if (typeof prop !== 'string') {
+    get(target, prop) {
+        if (typeof prop !== 'string') {
                 return false;
             }
 
@@ -137,9 +137,8 @@ JAVASCRIPT;
 
     private function runPrettier(string $path, string $prettierCommand = 'npx prettier'): void
     {
-        $prettier = $this->option('prettier') ?: $prettierCommand;
-
-        exec("{$prettier} --write {$path}");
+        $prettier = $this->option('prettier') ?: $prettierCommand; 
+        exec("{$prettier} {$path} --write");
     }
 
     private function base(): string
