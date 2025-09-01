@@ -16,7 +16,7 @@ class GenerateCommand extends Command
     protected $signature = 'laravel-magic-enums:generate 
         {--input=app/Enums}
         {--output=resources/js/magic-enums}
-        {--format=false}
+        {--format}
         {--prettier=}';
 
     protected $description = 'Export enums to your frontend.';

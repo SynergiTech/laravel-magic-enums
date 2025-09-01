@@ -1,6 +1,6 @@
 import { artisan } from '@/utils.js';
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterAll } from 'vitest';
 import { promises as fs } from 'node:fs';
 
 describe('index.js', async () => {
@@ -19,11 +19,14 @@ describe('index.js', async () => {
   beforeEach(() => {
     vi.resetModules();
   });
-  /* 
+
   afterAll(async () => {
-    await fs.rm('workbench/resources/js/enums', { recursive: true, force: true });
+    await fs.rm('workbench/resources/js/enums', {
+      recursive: true,
+      force: true,
+    });
   });
- */
+
   it('matches the expected structure', async () => {
     artisan(`laravel-magic-enums:generate --output=${outputDir}`);
 
