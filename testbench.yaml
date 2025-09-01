@@ -10,7 +10,7 @@ workbench:
   discovers:
     web: true
     api: false
-    commands: true
+    commands: false
     components: false
     views: false
   build: []
