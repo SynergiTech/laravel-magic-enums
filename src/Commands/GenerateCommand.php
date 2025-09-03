@@ -191,7 +191,8 @@ JAVASCRIPT;
 
             foreach ($tokens as $index => $token) {
                 // The namespace is a `T_NAME_QUALIFIED` that is immediately preceded by a `T_NAMESPACE`.
-                if ($token[0] === T_NAMESPACE && isset($tokens[$index + 1])
+                if (
+                    $token[0] === T_NAMESPACE && isset($tokens[$index + 1])
                     && $tokens[$index + 1][0] === T_NAME_QUALIFIED
                 ) {
                     $namespace = $tokens[$index + 1][1];
