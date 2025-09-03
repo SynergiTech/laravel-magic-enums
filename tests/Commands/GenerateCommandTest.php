@@ -14,6 +14,6 @@ class GenerateCommandTest extends TestCase
         $result = $this->artisan('laravel-magic-enums:generate --input=app/Enums --output=enums');
         $this->assertInstanceOf(PendingCommand::class, $result);
         $result->assertSuccessful();
-        $this->assertFileExists('enums/index.js');
+        $this->assertFileExists('./storage/enums/index.js');
     }
 }
