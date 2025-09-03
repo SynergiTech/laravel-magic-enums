@@ -68,8 +68,7 @@ class GenerateCommand extends Command
         $rootNamespace = $this->determineRootNamespace($enums);
 
         foreach ($enums as $class) {
-            $classKey = Str::of($class)
-                ->chopStart($rootNamespace)
+            $classKey = Str::of($this->chopStart($class, $rootNamespace))
                 ->replace('\\', '')
                 ->toString();
 
@@ -192,8 +191,7 @@ JAVASCRIPT;
 
             foreach ($tokens as $index => $token) {
                 // The namespace is a `T_NAME_QUALIFIED` that is immediately preceded by a `T_NAMESPACE`.
-                if (
-                    $token[0] === T_NAMESPACE && isset($tokens[$index + 1])
+                if ($token[0] === T_NAMESPACE && isset($tokens[$index + 1])
                     && $tokens[$index + 1][0] === T_NAME_QUALIFIED
                 ) {
                     $namespace = $tokens[$index + 1][1];
@@ -215,5 +213,17 @@ JAVASCRIPT;
 
         fclose($handle);
         return $namespace . '\\' . $class;
+    }
+
+    // Laravel < 11 doesn't have Str::chopStart
+    private static function chopStart($subject, $needle)
+    {
+        foreach ((array) $needle as $n) {
+            if (str_starts_with($subject, $n)) {
+                return substr($subject, strlen($n));
+            }
+        }
+
+        return $subject;
     }
 }
