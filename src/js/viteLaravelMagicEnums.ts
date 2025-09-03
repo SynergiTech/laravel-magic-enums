@@ -4,29 +4,28 @@ import { execSync } from 'node:child_process';
 
 interface PluginOptions {
   /**
-   * The directory to watch for changes.
+   * The enums directory to watch for changes.
    * @default app/Enums
    */
   input?: string;
   /**
-   * The output file for the enum interface.
-   * @default magic-enums.d.ts
+   * The output directory for generated files.
    */
   output?: string;
   /**
-   * Additional options to pass to chokidar.
+   * Whether to format the generated file with `--format` flag.
+   * @default false
    */
-  chokidarOptions?: ChokidarOptions;
+  format?: boolean;
   /**
    * The command to run prettier and format the enum export. A value of `undefined` will not run prettier.
    * @default undefined
    */
   prettier?: string;
   /**
-   * Whether to format the generated file with `--format` flag.
-   * @default false
+   * Additional options to pass to chokidar.
    */
-  format?: boolean;
+  chokidarOptions?: ChokidarOptions;
 }
 
 const defaultChokidarOptions: ChokidarOptions = {
@@ -43,44 +42,44 @@ function artisan(command: string): void {
   execSync(`php artisan ${command}`).toString('utf8');
 }
 
-export function laravelMagicEnums(options: PluginOptions): Plugin {
+export function laravelMagicEnums(options?: PluginOptions): Plugin {
   let fsWatcher: FSWatcher | null = null;
 
   const pluginConfig = {
-    input: options.input ?? 'app/Enums',
-    output: options.output ?? 'resources/js/magic-enums/enums.js',
-    prettier: options.prettier,
-    format: options.format ?? false,
+    input: options?.input ?? 'app/Enums',
+    output: options?.output ?? 'resources/js/magic-enums',
+    prettier: options?.prettier ?? undefined,
+    format: options?.format ?? false,
     chokidarOptions: {
       ...defaultChokidarOptions,
-      ...(options.chokidarOptions ?? {}),
+      ...(options?.chokidarOptions ?? {}),
     },
   } satisfies PluginOptions;
 
   const listenToInput = debounce(function (e: string) {
-    if (e.startsWith(pluginConfig.input.slice(2))) {
+    if (e.startsWith(pluginConfig.input)) {
       regenerate();
     }
   }, 200);
 
-  async function regenerate() {
-    console.info('Rebuilding enums file...');
-
-    let command = `laravel-magic-enums:generate \
-      --input=${pluginConfig.input}
-      --output=${pluginConfig.output}`;
+  function regenerate() {
+    const command: string[] = [
+      `laravel-magic-enums:generate`,
+      `--input="${pluginConfig.input}"`,
+      `--output="${pluginConfig.output}"`,
+    ];
 
     if (pluginConfig.format) {
-      command += `--format`;
+      command.push(`--format`);
     }
 
     if (pluginConfig.prettier) {
-      command += `--prettier="${pluginConfig.prettier}"`;
+      command.push(`--prettier="${pluginConfig.prettier}"`);
     }
 
-    artisan(command);
+    artisan(command.join(' '));
 
-    console.info('... Rebuilt enums file!');
+    console.info('Laravel Magic Enums: Rebuilt enums file!');
   }
 
   return {

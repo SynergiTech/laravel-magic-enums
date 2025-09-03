@@ -132,7 +132,7 @@ JAVASCRIPT;
         $this->info("Wrote enums to {$this->jsFilePath($path)}!");
     }
 
-    private function runPrettier(string $path, string $prettierCommand = 'npx prettier'): void
+    private function runPrettier(string $path, string $prettierCommand = 'npm exec prettier -- '): void
     {
         $prettier = $this->option('prettier') ?: $prettierCommand;
         exec("{$prettier} {$path} --write");
