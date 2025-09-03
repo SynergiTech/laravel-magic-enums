@@ -77,9 +77,13 @@ export function laravelMagicEnums(options?: PluginOptions): Plugin {
       command.push(`--prettier="${pluginConfig.prettier}"`);
     }
 
-    artisan(command.join(' '));
+    const concatenatedCommand = command.join(' ');
 
-    console.info('Laravel Magic Enums: Rebuilt enums file!');
+    console.info(
+      `Laravel Magic Enums: Running php artisan command: ${concatenatedCommand}`,
+    );
+
+    artisan(concatenatedCommand);
   }
 
   return {
