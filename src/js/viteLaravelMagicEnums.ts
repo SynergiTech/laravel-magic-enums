@@ -48,7 +48,7 @@ export function laravelMagicEnums(options: PluginOptions): Plugin {
 
   const pluginConfig = {
     input: options.input ?? 'app/Enums',
-    output: options.output ?? 'resources/js/laravel-magic-enums/enums.js',
+    output: options.output ?? 'resources/js/magic-enums/enums.js',
     prettier: options.prettier,
     format: options.format ?? false,
     chokidarOptions: {
