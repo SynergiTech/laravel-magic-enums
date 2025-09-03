@@ -24,14 +24,6 @@ export function setEnums(options: Record<string, MagicEnum>) {
   Object.freeze(enums);
 }
 
-export async function vueEnumPlugin(path: string) {
-  return {
-    async install() {
-      setEnums(await import(path));
-    },
-  };
-}
-
 export function useEnums() {
   return enums;
 }

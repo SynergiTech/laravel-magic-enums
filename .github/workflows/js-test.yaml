@@ -22,12 +22,10 @@ jobs:
         with:
           php-version: 8.4
           extensions: libxml
-          # coverage: xdebug
           tools: composer:v2
 
       - name: Install PHP dependencies
-        run: |
-          composer install --no-interaction
+        run: composer install --no-interaction
 
       - name: Build
         run: bun run build:package

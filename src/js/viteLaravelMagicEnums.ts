@@ -1,6 +1,6 @@
 import chokidar, { type FSWatcher, type ChokidarOptions } from 'chokidar';
 import type { Plugin } from 'vite';
-import { artisan } from './utils';
+import { execSync } from 'node:child_process';
 
 interface PluginOptions {
   /**
@@ -38,6 +38,10 @@ const defaultChokidarOptions: ChokidarOptions = {
   persistent: false,
   interval: 300,
 };
+
+function artisan(command: string): void {
+  execSync(`php artisan ${command}`).toString('utf8');
+}
 
 export function laravelMagicEnums(options: PluginOptions): Plugin {
   let fsWatcher: FSWatcher | null = null;

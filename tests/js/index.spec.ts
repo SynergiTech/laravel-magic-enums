@@ -1,7 +1,12 @@
-import { artisan } from '@/utils.js';
-
 import { describe, it, expect, beforeEach, vi, afterAll } from 'vitest';
 import { promises as fs } from 'node:fs';
+import { execSync } from 'node:child_process';
+import path from 'node:path';
+
+function artisan(command: string): void {
+  const testbenchDir = path.join('vendor', 'bin', 'testbench');
+  execSync(`${testbenchDir} ${command}`).toString('utf8');
+}
 
 describe('index.js', async () => {
   const outputDir = 'workbench/resources/js/enums';
