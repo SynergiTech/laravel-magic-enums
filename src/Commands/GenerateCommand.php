@@ -9,8 +9,6 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SynergiTech\MagicEnums\Interfaces\MagicEnum;
 
-use function Illuminate\Filesystem\join_paths;
-
 class GenerateCommand extends Command
 {
     protected $signature = 'laravel-magic-enums:generate 
@@ -91,7 +89,7 @@ class GenerateCommand extends Command
 
     private function jsFilePath(string $path): string
     {
-        return join_paths($path, 'index.js');
+        return $this->joinPaths($path, 'index.js');
     }
 
     private function writeFiles($path, $content)
@@ -142,7 +140,7 @@ JAVASCRIPT;
 
     private function base(): string
     {
-        return join_paths(base_path(), $this->option('input'));
+        return $this->joinPaths(base_path(), $this->option('input'));
     }
 
     private function determineRootNamespace(array $classes): string
@@ -217,7 +215,7 @@ JAVASCRIPT;
     }
 
     // Laravel < 11 doesn't have Str::chopStart
-    private static function chopStart($subject, $needle)
+    private function chopStart($subject, $needle)
     {
         foreach ((array) $needle as $n) {
             if (str_starts_with($subject, $n)) {
@@ -226,5 +224,19 @@ JAVASCRIPT;
         }
 
         return $subject;
+    }
+
+    // Laravel < 10 doesn't have Illuminate\Filesystem\join_paths
+    private function joinPaths($basePath, ...$paths): string
+    {
+        foreach ($paths as $index => $path) {
+            if (empty($path) && $path !== '0') {
+                unset($paths[$index]);
+            } else {
+                $paths[$index] = DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR);
+            }
+        }
+
+        return $basePath . implode('', $paths);
     }
 }
