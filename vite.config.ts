@@ -33,7 +33,6 @@ export default defineConfig(({ mode }) => {
         emptyOutDir: true,
         lib: {
           entry: {
-            useEnums: resolve('src/js/useEnums.ts'),
             viteLaravelMagicEnums: resolve('src/js/viteLaravelMagicEnums.ts'),
           },
           formats: ['es', 'cjs'],
