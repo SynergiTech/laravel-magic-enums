@@ -15,7 +15,7 @@
 /package-lock.json export-ignore
 /package.json export-ignore
 /phpunit.xml export-ignore
-/testbench.yml export-ignore
+/testbench.yaml export-ignore
 /tsconfig.json export-ignore
 /vite.config.ts export-ignore
 /vitest.config.ts export-ignore
