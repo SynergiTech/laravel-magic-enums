@@ -1,6 +1,3 @@
-providers:
-  - App\Providers\WorkbenchServiceProvider
-
 laravel: ./workbench
 
 workbench:

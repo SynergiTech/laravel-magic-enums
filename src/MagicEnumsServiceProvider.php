@@ -12,7 +12,7 @@ class MagicEnumsServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands(
                 [
-                GenerateCommand::class,
+                    GenerateCommand::class,
                 ]
             );
         }
