@@ -40,13 +40,13 @@ class GenerateCommand extends Command
         $values = [];
 
         /**
- * @var iterable<string,\SplFileInfo> 
-*/
+          * @var iterable<string,\SplFileInfo>
+          */
         $paths = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
 
         /**
- * @var array<string,string> $enums 
-*/
+          * @var array<string,string> $enums
+          */
         $enums = collect($paths)
             ->reject(fn ($i) => $i->isDir() || str_ends_with($i->getRealPath(), '/..'))
             ->map(
@@ -82,8 +82,8 @@ class GenerateCommand extends Command
         }
 
         /**
- * @var array<string,array<string,string>> $values 
-*/
+          * @var array<string,array<string,string>> $values
+          */
         return json_encode($values);
     }
 
@@ -189,7 +189,8 @@ JAVASCRIPT;
 
             foreach ($tokens as $index => $token) {
                 // The namespace is a `T_NAME_QUALIFIED` that is immediately preceded by a `T_NAMESPACE`.
-                if ($token[0] === T_NAMESPACE && isset($tokens[$index + 1])
+                if (
+                    $token[0] === T_NAMESPACE && isset($tokens[$index + 1])
                     && $tokens[$index + 1][0] === T_NAME_QUALIFIED
                 ) {
                     $namespace = $tokens[$index + 1][1];
