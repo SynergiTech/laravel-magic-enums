@@ -11,5 +11,4 @@ enum EnumWithSpaces: string implements MagicEnum
 
     case TwentyOne = 'Twenty One';
     case TwentyTwo = 'Twenty Two';
-
 }
