@@ -16,7 +16,7 @@ $ npm install --save laravel-magic-enums
 
 ## Getting Started
 
-1. Add the trait and interface from this package to your enums
+1. Add the trait and interface from this package to your enums. We recommend you don't include sensitive information in your enums.
 
 ```php
 <?php
@@ -32,49 +32,17 @@ enum YourEnum: string implements MagicEnum
 ...
 ```
 
-1. Include the route somewhere in your routes file of choice, in this example we are going to create `/api/enums`.
+2. Generate an export of enums with `php artisan laravel-magic-enums:generate`. This will create a file at `resources/js/magic-enums/index.js`.
 
-```php
-<?php
-
-use Illuminate\Support\Facades\Route;
-use SynergiTech\MagicEnums\Facades\MagicEnumsRouteFacade;
-
-Route::prefix('/api')->group(function () {
-    MagicEnumsRouteFacade::enumsController();
-});
-```
-
-You can obviously include middleware on it if you wish, e.g. for an authenticated session, but this may affect your frontend's ability to initialise, so please be careful.
-
-We recommend you don't include sensitive information in your enums.
-
-3. We work primarily with Inertia and Vue so the integration looks something like this. Note the use of `async`/`await` and reusing the route we created earlier.
+3. Use the exported enums in your frontend like so. Your IDE will any types from your enums:
 
 ```js
-import { vueEnumPlugin } from "laravel-magic-enums";
-import { createApp, h } from "vue";
-import { createInertiaApp } from "@inertiajs/vue3";
+import { enums } from 'resources/js/magic-enums/index.js';
 
-createInertiaApp({
-  resolve: (name) => {
-    const pages = import.meta.glob("./Pages/**/*.vue");
-    return pages[`./Pages/${name}.vue`]();
-  },
-
-  async setup({ el, App, props, plugin }) {
-    createApp({ render: () => h(App, props) })
-      .use(await vueEnumPlugin("/api/enums"))
-      .mount(el);
-  },
-...
+const { TestingEnums } = enums;
 ```
 
-4. During development, you can have Vite reload automatically when your enums change. This is handled by `chokidar`. You might also wish to compile a types definition so your IDE knows the details of the enums. We recommend adding this file to your `.gitignore` file.
-
-While not necessary, you can also provide a cli command to `prettierCommand` to format the generated TypeScript file according to your project's standards.
-
-Update your `vite.config.js` as follows. You'll notice we provide both the directory and the endpoint.
+4. During development, you can have Vite react automatically to changes in your enums. The `laravel-magic-enums/vite` plugin provides a simple way to do this. Under the hood, this calls the `php artisan laravel-magic-enums:generate` command, and can customise it. For example, here's how to use it with some customisations:
 
 ```js
 import { defineConfig } from 'vite';
@@ -91,22 +59,15 @@ export default defineConfig({
         ...
     }),
     laravelMagicEnums({
-      enumDir: "./app/Enums",
-      enumEndpoint: "http://localhost/api/enums",
-      interfaceOutput: "./resources/js/globals.d.ts",
-      prettierCommand: "prettier --write",
+      input: 'app/Enums',
+      output: 'resources/js/my-enums',
+      format: true,
     }),
   ],
 ...
 ```
 
-5. Now in your frontend, you can reference your enums as if they were key-value objects.
-
-```js
-import { useEnums } from 'laravel-magic-enums';
-
-const { YourEnum, YourOtherEnum } = useEnums();
-```
+5. We recommend adding the exported enums to the `.gitignore` file.
 
 ## Advanced Usage
 
@@ -180,10 +141,6 @@ TestingEnumJustOne: {
   }
 }
 ```
-
-### Cache and Versioning
-
-To avoid rebuilding the json everytime the endpoint is requested, you can add a file named `VERSION` to your root folder. Magic Enums will determine whether to cache the output based on the time this file was last touched. You can specify a custom cache key in the config.
 
 ### Extending
 

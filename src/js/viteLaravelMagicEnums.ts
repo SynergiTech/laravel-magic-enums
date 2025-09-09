@@ -1,41 +1,32 @@
-import { promises as fs } from 'fs';
-import { exec } from 'child_process';
 import chokidar, { type FSWatcher, type ChokidarOptions } from 'chokidar';
-import type { Plugin, ResolvedConfig } from 'vite';
+import type { Plugin } from 'vite';
+import { execSync } from 'node:child_process';
 
 interface PluginOptions {
   /**
-   * The directory to watch for changes.
+   * The enums directory to watch for changes.
    * @default app/Enums
    */
-  enumDir?: string;
+  input?: string;
   /**
-   * The Laravel endpoint to fetch the enums from.
-   * @default //localhost/enums
+   * The output directory for generated files.
    */
-  enumEndpoint?: string;
+  output?: string;
   /**
-   * The output file for the enum interface.
-   * @default magic-enums.d.ts
+   * Whether to format the generated file with `--format` flag.
+   * @default false
    */
-  interfaceOutput?: string;
-  /**
-   * Additional options to pass to chokidar.
-   */
-  chokidarOptions?: ChokidarOptions;
+  format?: boolean;
   /**
    * The command to run prettier and format the enum export. A value of `undefined` will not run prettier.
    * @default undefined
    */
-  prettierCommand?: string | undefined;
+  prettier?: string;
+  /**
+   * Additional options to pass to chokidar.
+   */
+  chokidarOptions?: ChokidarOptions;
 }
-
-const defaultOptions = {
-  enumDir: 'app/Enums',
-  enumEndpoint: '//localhost/enums',
-  interfaceOutput: 'laravel-magic-enums.d.ts',
-  prettierCommand: undefined,
-};
 
 const defaultChokidarOptions: ChokidarOptions = {
   ignoreInitial: true,
@@ -47,80 +38,65 @@ const defaultChokidarOptions: ChokidarOptions = {
   interval: 300,
 };
 
-export function laravelMagicEnums(options: PluginOptions): Plugin {
+function artisan(command: string): void {
+  execSync(`php artisan ${command}`).toString('utf8');
+}
+
+export function laravelMagicEnums(options?: PluginOptions): Plugin {
   let fsWatcher: FSWatcher | null = null;
-  let resolvedConfig: ResolvedConfig = {} as ResolvedConfig;
 
   const pluginConfig = {
-    ...defaultOptions,
-    ...options,
+    input: options?.input ?? 'app/Enums',
+    output: options?.output ?? 'resources/js/magic-enums',
+    prettier: options?.prettier ?? undefined,
+    format: options?.format ?? false,
     chokidarOptions: {
       ...defaultChokidarOptions,
-      ...(options.chokidarOptions ?? {}),
+      ...(options?.chokidarOptions ?? {}),
     },
-  };
+  } satisfies PluginOptions;
 
-  Object.assign(pluginConfig.chokidarOptions, options.chokidarOptions ?? {});
-
-  const listenToEnumFolder = debounce(function (e: string) {
-    if (e.startsWith(pluginConfig.enumDir.slice(2))) {
-      exportEnums();
+  const listenToInput = debounce(function (e: string) {
+    if (e.startsWith(pluginConfig.input)) {
+      regenerate();
     }
   }, 200);
 
-  async function exportEnums() {
-    const get = async function () {
-      const response = await fetch(pluginConfig.enumEndpoint);
+  function regenerate() {
+    const command: string[] = [
+      `laravel-magic-enums:generate`,
+      `--input="${pluginConfig.input}"`,
+      `--output="${pluginConfig.output}"`,
+    ];
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch enums');
-      }
-
-      const json = await response.json();
-
-      await fs.writeFile(
-        pluginConfig.interfaceOutput,
-        `declare global { interface LaravelMagicEnums ${JSON.stringify(
-          json,
-        )};} export {};`,
-      );
-
-      // Prettier.
-      if (pluginConfig.prettierCommand) {
-        exec(
-          `${pluginConfig.prettierCommand} --write ${pluginConfig.interfaceOutput}`,
-        );
-      }
-    };
-
-    console.info('Rebuilding enums file...');
-
-    try {
-      await get();
-      console.info('... Rebuilt enums file!');
-    } catch (e) {
-      console.error(
-        'Failed to rebuild enums file. Trying again in 2 seconds.',
-        e,
-      );
-
-      setTimeout(exportEnums, 2000);
+    if (pluginConfig.format) {
+      command.push(`--format`);
     }
+
+    if (pluginConfig.prettier) {
+      command.push(`--prettier="${pluginConfig.prettier}"`);
+    }
+
+    const concatenatedCommand = command.join(' ');
+
+    console.info(
+      `Laravel Magic Enums: Running php artisan command: ${concatenatedCommand}`,
+    );
+
+    artisan(concatenatedCommand);
   }
 
   return {
     name: 'laravel-magic-enums',
     configResolved(config) {
-      resolvedConfig = config;
-
       fsWatcher = chokidar
-        .watch(pluginConfig.enumDir, pluginConfig.chokidarOptions)
-        .on('change', listenToEnumFolder)
-        .on('add', listenToEnumFolder)
-        .on('unlink', listenToEnumFolder);
+        .watch(pluginConfig.input, pluginConfig.chokidarOptions)
+        .on('change', listenToInput)
+        .on('add', listenToInput)
+        .on('unlink', listenToInput);
 
-      if (resolvedConfig.mode === 'development') {
-        exportEnums();
+      if (config.mode === 'development') {
+        regenerate();
       }
     },
 

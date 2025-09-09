@@ -5,11 +5,6 @@
   "private": false,
   "type": "module",
   "exports": {
-    ".": {
-      "types": "./dist/useEnums.d.ts",
-      "import": "./dist/useEnums.js",
-      "require": "./dist/useEnums.cjs"
-    },
     "./vite": {
       "types": "./dist/viteLaravelMagicEnums.d.ts",
       "import": "./dist/viteLaravelMagicEnums.js",

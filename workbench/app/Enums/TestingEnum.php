@@ -44,7 +44,7 @@ enum TestingEnum: string implements MagicEnum
      */
     #[AppendValueToMagic]
     public const COLOURS = [
-        self::First->value => 'red',
+        self::First->value => 'purple',
         self::Second->value => 'yellow',
         self::Third->value => 'green',
     ];

@@ -37,8 +37,11 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "App\\": "app/",
-      "SynergiTech\\MagicEnums\\Tests\\": "tests/"
+      "App\\": "workbench/app/",
+      "SynergiTech\\MagicEnums\\Tests\\": "tests/",
+      "Workbench\\App\\": "workbench/app/",
+      "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+      "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
     }
   },
   "extra": {
@@ -54,14 +57,19 @@
     ],
     "lint": [
       "parallel-lint --exclude vendor .",
-      "phpcs --standard=PSR12 src/ tests/"
+      "phpcs --standard=PSR12 src tests"
     ],
     "test": [
       "Composer\\Config::disableProcessTimeout",
       "@lint",
       "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text",
       "@analyse"
-    ]
+    ],
+    "post-autoload-dump": [
+      "@prepare"
+    ],
+    "prepare": "@php vendor/bin/testbench package:discover --ansi",
+    "build": "@php vendor/bin/testbench workbench:build --ansi"
   },
   "config": {
     "optimize-autoloader": true,

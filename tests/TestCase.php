@@ -4,9 +4,12 @@ namespace SynergiTech\MagicEnums\Tests;
 
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use SynergiTech\MagicEnums\Facades\MagicEnumsRouteFacade;
+use Orchestra\Testbench\Concerns\WithWorkbench;
 
 class TestCase extends OrchestraTestCase
 {
+    use WithWorkbench;
+
     protected function getPackageProviders($app)
     {
         return [\SynergiTech\MagicEnums\MagicEnumsServiceProvider::class];
@@ -15,10 +18,6 @@ class TestCase extends OrchestraTestCase
     protected function resolveApplicationConfiguration($app)
     {
         parent::resolveApplicationConfiguration($app);
-
-        // app_path behaves differently in orchestra testbench
-        // so hardcode the path the container expects
-        $app['config']->set('magicenums.enum_directory', '/package/app/Enums');
     }
 
     public function getEnvironmentSetUp($app)
@@ -29,8 +28,6 @@ class TestCase extends OrchestraTestCase
     public function setUp(): void
     {
         parent::setUp();
-
-        MagicEnumsRouteFacade::enumsController();
 
         // $this->artisan('migrate')->run();
     }

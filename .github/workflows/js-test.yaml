@@ -17,6 +17,16 @@ jobs:
       - name: Install Bun Dependencies
         run: bun install
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+          extensions: libxml
+          tools: composer:v2
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction
+
       - name: Build
         run: bun run build:package
 
