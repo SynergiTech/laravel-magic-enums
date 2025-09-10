@@ -15,3 +15,6 @@ workbench/bootstrap/cache/testbench.yaml
 workbench/storage/logs   
 resources/js/magic-enums
 enums
+/.idea
+/.vscode
+.DS_Store
