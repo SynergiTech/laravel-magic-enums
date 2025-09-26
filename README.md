@@ -144,4 +144,4 @@ TestingEnumJustOne: {
 
 ### Extending
 
-If you wish to have more control over appending values to your magic enums for the frontend, you can extend the current trait using something along the lines of [app/Traits/CustomMagic.php](app/Traits/CustomMagic.php) as long as you always follow the interface and provide the function.
+If you wish to have more control over appending values to your magic enums for the frontend, you can extend the current trait using something along the lines of [app/Traits/CustomMagic.php](workbench/app/Traits/CustomMagic.php) as long as you always follow the interface and provide the function.
