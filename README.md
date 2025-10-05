@@ -34,7 +34,7 @@ enum YourEnum: string implements MagicEnum
 
 2. Generate an export of enums with `php artisan laravel-magic-enums:generate`. This will create a file at `resources/js/magic-enums/index.js`.
 
-3. Use the exported enums in your frontend like so. Your IDE will any types from your enums:
+3. Use the exported enums in your frontend like so. Your IDE will infer any types from your enums:
 
 ```js
 import { enums } from 'resources/js/magic-enums/index.js';
