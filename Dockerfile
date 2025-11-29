@@ -22,6 +22,8 @@ USER dev
 COPY --chown=dev composer.json ./
 
 ARG LARAVEL=9
+# Currently Laravel 9 requires audit.block-insecure to be false
+RUN if [ $LARAVEL = 9 ]; then composer config audit.block-insecure false; fi
 RUN composer require laravel/framework ^$LARAVEL.0
 
 COPY --chown=dev . .
