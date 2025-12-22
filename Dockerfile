@@ -21,7 +21,7 @@ USER dev
 
 COPY --chown=dev composer.json ./
 
-ARG LARAVEL=9
+ARG LARAVEL=10
 RUN composer require laravel/framework ^$LARAVEL.0
 
 COPY --chown=dev . .

@@ -49,6 +49,11 @@
       "providers": [
         "SynergiTech\\MagicEnums\\MagicEnumsServiceProvider"
       ]
+    },
+    "phpstan": {
+      "includes": [
+        "extension.neon"
+      ]
     }
   },
   "scripts": {
