@@ -10,7 +10,7 @@ return [
     'services' => [
         [
             'class' => $extensionClass,
-            'tags' => ['phpstan.alwaysUsedClassConstantsExtension'],
+            'tags' => ['phpstan.constants.alwaysUsedClassConstantsExtension'],
         ],
     ],
 ];
