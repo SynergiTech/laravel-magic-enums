@@ -52,7 +52,7 @@
     },
     "phpstan": {
       "includes": [
-        "extension.neon"
+        "extension.php"
       ]
     }
   },

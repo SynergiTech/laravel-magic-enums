@@ -1,5 +1,0 @@
-services:
-	-
-		class: SynergiTech\MagicEnums\PHPStan\MagicEnumConstantExtension
-		tags:
-			- phpstan.constants.alwaysUsedClassConstantsExtension
