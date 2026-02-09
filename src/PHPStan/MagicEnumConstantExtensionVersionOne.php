@@ -4,23 +4,19 @@ namespace SynergiTech\MagicEnums\PHPStan;
 
 use PHPStan\Reflection\ConstantReflection;
 use PHPStan\Rules\Constants\AlwaysUsedClassConstantsExtension;
-use SynergiTech\MagicEnums\Attributes\AppendConstToMagic;
-use SynergiTech\MagicEnums\Attributes\AppendValueToMagic;
+use SynergiTech\MagicEnums\Interfaces\MagicEnum;
 
 class MagicEnumConstantExtensionVersionOne implements AlwaysUsedClassConstantsExtension
 {
     public function isAlwaysUsed(ConstantReflection $constant): bool
     {
-        $attributes = $constant->getAttributes();
+        $declaringClass = $constant->getDeclaringClass();
 
-        foreach ($attributes as $attribute) {
-            $attributeClass = $attribute->getName();
-            if (
-                $attributeClass === AppendConstToMagic::class ||
-                $attributeClass === AppendValueToMagic::class
-            ) {
-                return true;
-            }
+        if (
+            $declaringClass->isBackedEnum() &&
+            $declaringClass->implementsInterface(MagicEnum::class)
+        ) {
+            return true;
         }
 
         return false;
