@@ -1,6 +1,6 @@
 <?php
 
-if (file_exists('phar://' . __DIR__ . '/vendor/phpstan/phpstan/phpstan.phar/src/Reflection/ClassConstantReflection.php')) {
+if (interface_exists(\PHPStan\Reflection\ClassConstantReflection::class)) {
   $extensionClass = \SynergiTech\MagicEnums\PHPStan\MagicEnumConstantExtension::class;
 } else {
   $extensionClass = \SynergiTech\MagicEnums\PHPStan\MagicEnumConstantExtensionVersionOne::class;
