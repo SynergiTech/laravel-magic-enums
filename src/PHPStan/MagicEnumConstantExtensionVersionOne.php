@@ -7,7 +7,7 @@ use PHPStan\Rules\Constants\AlwaysUsedClassConstantsExtension;
 use SynergiTech\MagicEnums\Attributes\AppendConstToMagic;
 use SynergiTech\MagicEnums\Attributes\AppendValueToMagic;
 
-class MagicEnumConstantExtension implements AlwaysUsedClassConstantsExtension
+class MagicEnumConstantExtensionVersionOne implements AlwaysUsedClassConstantsExtension
 {
     public function isAlwaysUsed(ConstantReflection $constant): bool
     {
