@@ -171,46 +171,38 @@ JAVASCRIPT;
 
     protected function fqcnFromPath(string $path): string
     {
-        $namespace = $class = $buffer = '';
+        $tokens = token_get_all(file_get_contents($path));
 
-        $handle = fopen($path, 'r');
+        // Filter out whitespace and comments from the tokens, as they are irrelevant.
+        $tokens = array_filter(
+            $tokens,
+            fn($token) => is_array($token) && $token[0] !== T_WHITESPACE && $token[0] !== T_COMMENT
+        );
 
-        while (!feof($handle)) {
-            $buffer .= fread($handle, 512);
+        // Reset array indexes after filtering.
+        $tokens = array_values($tokens);
 
-            // Suppress warnings for cases where `$buffer` ends in the middle of a PHP comment.
-            $tokens = @token_get_all($buffer);
+        $namespace = $class = '';
 
-            // Filter out whitespace and comments from the tokens, as they are irrelevant.
-            $tokens = array_filter($tokens, fn($token) => $token[0] !== T_WHITESPACE && $token[0] !== T_COMMENT);
-
-            // Reset array indexes after filtering.
-            $tokens = array_values($tokens);
-
-            foreach ($tokens as $index => $token) {
-                // The namespace is a `T_NAME_QUALIFIED` that is immediately preceded by a `T_NAMESPACE`.
-                if (
-                    $token[0] === T_NAMESPACE && isset($tokens[$index + 1])
-                    && $tokens[$index + 1][0] === T_NAME_QUALIFIED
-                ) {
-                    $namespace = $tokens[$index + 1][1];
-                    continue;
-                }
-
-                // The class name is a `T_STRING` which makes it unreliable to match against, so check if we have a
-                // `T_ENUM` token with a `T_STRING` token ahead of it.
-                if ($token[0] === T_ENUM && isset($tokens[$index + 1]) && $tokens[$index + 1][0] === T_STRING) {
-                    $class = $tokens[$index + 1][1];
-                }
+        foreach ($tokens as $index => $token) {
+            // The namespace is a `T_NAME_QUALIFIED` that is immediately preceded by a `T_NAMESPACE`.
+            if (
+                $token[0] === T_NAMESPACE && isset($tokens[$index + 1])
+                && $tokens[$index + 1][0] === T_NAME_QUALIFIED
+            ) {
+                $namespace = $tokens[$index + 1][1];
             }
 
+            // The class name is a `T_STRING` which makes it unreliable to match against, so check if we have a
+            // `T_ENUM` token with a `T_STRING` token ahead of it.
+            if ($token[0] === T_ENUM && isset($tokens[$index + 1]) && $tokens[$index + 1][0] === T_STRING) {
+                $class = $tokens[$index + 1][1];
+            }
             if ($namespace && $class) {
-                // We've found both the namespace and the class, we can now stop reading and parsing the file.
                 break;
             }
         }
 
-        fclose($handle);
         return $namespace . '\\' . $class;
     }
 
