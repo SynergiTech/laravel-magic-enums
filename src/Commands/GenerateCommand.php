@@ -176,7 +176,7 @@ JAVASCRIPT;
         // Filter out whitespace and comments from the tokens, as they are irrelevant.
         $tokens = array_filter(
             $tokens,
-            fn($token) => is_array($token) && $token[0] !== T_WHITESPACE && $token[0] !== T_COMMENT
+            fn ($token) => is_array($token) && $token[0] !== T_WHITESPACE && $token[0] !== T_COMMENT
         );
 
         // Reset array indexes after filtering.
@@ -199,6 +199,7 @@ JAVASCRIPT;
                 $class = $tokens[$index + 1][1];
             }
             if ($namespace && $class) {
+                // We've found both the namespace and the class, we can now stop reading and parsing the file.
                 break;
             }
         }
